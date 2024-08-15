@@ -36,11 +36,11 @@ public class CorsConfig implements WebMvcConfigurer {
 //                .pathMapping("/");
 //    }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("https://merely-topical-starling.ngrok-free.app")
-                .allowedMethods("*");
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOrigins("https://merely-topical-starling.ngrok-free.app")
+//                .allowedMethods("*");
+//    }
 
 }
