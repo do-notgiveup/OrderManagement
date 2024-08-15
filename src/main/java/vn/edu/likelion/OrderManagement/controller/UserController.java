@@ -13,8 +13,8 @@ import vn.edu.likelion.OrderManagement.service.impl.JwtService;
 import vn.edu.likelion.OrderManagement.service.impl.UserServiceImpl;
 
 @RestController
-@RequestMapping("api/v1")
-//@CrossOrigin(origins = "*") // Adjust as needed
+@RequestMapping("/api/v1/auth")
+@CrossOrigin // Adjust as needed
 public class UserController {
 
     @Autowired
@@ -36,7 +36,7 @@ public class UserController {
         return "Welcome this endpoint is not secure";
     }
 
-    @PostMapping("/addNewUser")
+    @PostMapping("/register")
     public String addNewUser(@RequestBody UserEntity userInfo) {
         return service.addUser(userInfo);
     }
@@ -53,7 +53,7 @@ public class UserController {
         return "Welcome to Admin Profile";
     }
 
-    @PostMapping("/generateToken")
+    @PostMapping("/login")
     public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
