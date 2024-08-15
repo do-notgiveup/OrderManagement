@@ -43,9 +43,7 @@ public class AuthConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken", "/api/v1").permitAll()
-                        .requestMatchers(PUBLIC_SWAGGER).permitAll()
-                        .requestMatchers("https://merely-topical-starling.ngrok-free.app/**").permitAll()
-                        .requestMatchers("http://merely-topical-starling.ngrok-free.app/**").permitAll())
+                        .requestMatchers(PUBLIC_SWAGGER).permitAll())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/user/**").authenticated())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/admin/**").authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

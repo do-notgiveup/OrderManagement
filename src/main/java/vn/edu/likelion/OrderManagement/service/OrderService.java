@@ -1,7 +1,7 @@
 package vn.edu.likelion.OrderManagement.service;
 
-import vn.edu.likelion.OrderManagement.entity.UserEntity;
+import vn.edu.likelion.OrderManagement.entity.OrderEntity;
 
-public interface OrderService extends BaseCRUD<UserEntity> {
+public interface OrderService extends BaseCRUD<OrderEntity> {
 
 }
