@@ -3,11 +3,22 @@ package vn.edu.likelion.OrderManagement.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.likelion.OrderManagement.entity.OrderEntity;
+
 import vn.edu.likelion.OrderManagement.repository.OrderRepository;
 import vn.edu.likelion.OrderManagement.service.OrderService;
 
-import java.util.Iterator;
 import java.util.Optional;
+
+import vn.edu.likelion.OrderManagement.entity.OrderDetailEntity;
+import vn.edu.likelion.OrderManagement.repository.OrderDetailRepository;
+
+import java.util.List;
+
+/*
+ * OrderManager - OrderServiceImpl
+ * Author: Rains
+ * Date: 15/8/2024
+ */
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -15,8 +26,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-//    @Autowired
-//    private UserRepository userRepository;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
 
     @Override
     public OrderEntity create(OrderEntity orderEntity) {
@@ -28,18 +40,42 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(orderEntity);
     }
 
+//    @Override
+//    public Iterator<OrderEntity> findAll() {
+//
+//        if (orderRepository.existsById(orderEntity.getId())) {
+//            return orderRepository.save(orderEntity);
+//        } else {
+//            throw new RuntimeException("Order not found with id: " + orderEntity.getId());
+//        }
+//    }
+
     @Override
-    public void delete(OrderEntity orderEntity) {
-        orderRepository.delete(orderEntity);
+    public boolean delete(OrderEntity orderEntity) {
+        if (orderRepository.existsById(orderEntity.getId())) {
+            orderRepository.delete(orderEntity);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public Iterator<OrderEntity> findAll() {
-        return null;
+    public List<OrderEntity> findAll() {
+        return orderRepository.findAll();
     }
 
     @Override
     public Optional<OrderEntity> findById(int id) {
-        return Optional.empty();
+        return orderRepository.findById(id);
+    }
+
+    public OrderEntity createOrder(OrderEntity order, List<OrderDetailEntity> orderDetails) {
+        OrderEntity savedOrder = orderRepository.save(order);
+        for (OrderDetailEntity orderDetail : orderDetails) {
+            orderDetail.setOrder(savedOrder);
+            orderDetailRepository.save(orderDetail);
+        }
+        return savedOrder;
     }
 }
