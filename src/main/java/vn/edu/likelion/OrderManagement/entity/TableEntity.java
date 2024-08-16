@@ -1,5 +1,6 @@
 package vn.edu.likelion.OrderManagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,5 +28,6 @@ public class TableEntity extends BaseEntity implements Serializable {
     private boolean status;
 
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<OrderEntity> orders;
 }

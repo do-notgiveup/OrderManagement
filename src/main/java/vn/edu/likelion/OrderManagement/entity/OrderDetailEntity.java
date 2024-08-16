@@ -1,5 +1,7 @@
 package vn.edu.likelion.OrderManagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,9 +31,11 @@ public class OrderDetailEntity extends BaseEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "oder_id", nullable = false)
+    @JsonManagedReference
     private OrderEntity order;
 
     @ManyToOne
     @JoinColumn(name = "dish_id", nullable = false)
+    @JsonManagedReference
     private DishEntity dish;
 }
