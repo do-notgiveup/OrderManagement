@@ -1,6 +1,9 @@
 package vn.edu.likelion.OrderManagement.model;
 
 import lombok.Data;
+import vn.edu.likelion.OrderManagement.entity.DishEntity;
+
+import java.util.List;
 
 @Data
 public class OrderRequest {
@@ -16,5 +19,8 @@ public class OrderRequest {
 
     // id của user là người tạo order, ở đây là staff
     private int userId;
+
+    // danh sách các món ăn được order trong bàn, trong 1 phiên order
+    List<OrderDetailRequest> orderDetailRequests;
 
 }

@@ -4,21 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.likelion.OrderManagement.entity.OrderEntity;
 
-import vn.edu.likelion.OrderManagement.repository.OrderRepository;
+import vn.edu.likelion.OrderManagement.model.OrderDetailRequest;
+import vn.edu.likelion.OrderManagement.model.OrderRequest;
+import vn.edu.likelion.OrderManagement.repository.*;
 import vn.edu.likelion.OrderManagement.service.OrderService;
 
 import java.util.Optional;
 
 import vn.edu.likelion.OrderManagement.entity.OrderDetailEntity;
-import vn.edu.likelion.OrderManagement.repository.OrderDetailRepository;
 
 import java.util.List;
-
-/*
- * OrderManager - OrderServiceImpl
- * Author: Rains
- * Date: 15/8/2024
- */
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -29,6 +24,13 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
+    @Autowired
+    private TableRepository tableRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private DishRepository dishRepository;
 
     @Override
     public OrderEntity create(OrderEntity orderEntity) {
@@ -39,16 +41,6 @@ public class OrderServiceImpl implements OrderService {
     public OrderEntity update(OrderEntity orderEntity) {
         return orderRepository.save(orderEntity);
     }
-
-//    @Override
-//    public Iterator<OrderEntity> findAll() {
-//
-//        if (orderRepository.existsById(orderEntity.getId())) {
-//            return orderRepository.save(orderEntity);
-//        } else {
-//            throw new RuntimeException("Order not found with id: " + orderEntity.getId());
-//        }
-//    }
 
     @Override
     public boolean delete(OrderEntity orderEntity) {
@@ -70,12 +62,29 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findById(id);
     }
 
-    public OrderEntity createOrder(OrderEntity order, List<OrderDetailEntity> orderDetails) {
-        OrderEntity savedOrder = orderRepository.save(order);
-        for (OrderDetailEntity orderDetail : orderDetails) {
-            orderDetail.setOrder(savedOrder);
+    @Override
+    public OrderEntity createOrder(OrderRequest order) {
+        OrderEntity orderEntity = OrderEntity.builder()
+                .user(userRepository.findById(order.getUserId())
+                        .orElseThrow(() -> new RuntimeException("UserId not found")))
+                .status(false)
+                .table(tableRepository.findById(order.getTableId())
+                        .orElseThrow(() -> new RuntimeException("TableId not found")))
+                .build();
+
+        for (OrderDetailRequest orderDetailRequest : order.getOrderDetailRequests()) {
+            OrderDetailEntity orderDetail = OrderDetailEntity.builder()
+                    .quantity(orderDetailRequest.getQuantity())
+                    .pricePerItem(orderDetailRequest.getPricePerItem())
+                    .dish(dishRepository.findById(orderDetailRequest.getDishId()).get())
+                    .order(orderEntity)
+                    .build();
+
+            orderEntity.setPrice(orderDetail.getPricePerItem());
+
+            orderRepository.save(orderEntity);
             orderDetailRepository.save(orderDetail);
         }
-        return savedOrder;
+        return orderEntity;
     }
 }

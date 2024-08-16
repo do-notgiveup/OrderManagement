@@ -11,6 +11,7 @@ import vn.edu.likelion.OrderManagement.repository.UserRepository;
 import vn.edu.likelion.OrderManagement.service.UserService;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,13 +52,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public void delete(UserEntity userEntity) {
-
+    public boolean delete(UserEntity userEntity) {
+        repository.findById(userEntity.getId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userEntity.getId()));
+        repository.delete(userEntity);
+        return true;
     }
 
     @Override
-    public Iterator<UserEntity> findAll() {
-        return repository.findAll().iterator();
+    public List<UserEntity> findAll() {
+        return repository.findAll();
     }
 
     @Override
