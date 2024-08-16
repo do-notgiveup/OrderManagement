@@ -17,7 +17,7 @@ import java.util.List;
  * Date: 15/8/2024
  */
 @RestController
-@RequestMapping("/table")
+@RequestMapping("/api/v1/auth/table")
 public class TableController {
 
     @Autowired
@@ -55,7 +55,7 @@ public class TableController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTable(@PathVariable int id) {
         TableEntity tableEntity = tableService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Delete table successfully"));
         tableService.delete(tableEntity);
         return ResponseEntity.noContent().build();
     }

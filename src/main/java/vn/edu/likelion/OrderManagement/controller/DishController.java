@@ -44,12 +44,13 @@ public class DishController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDish(@PathVariable int id) {
+    public ResponseEntity<String> deleteDish(@PathVariable int id) {
         DishEntity dish = new DishEntity();
         dish.setId(id);
         boolean deleted = dishService.delete(dish);
         if (deleted) {
-            return ResponseEntity.noContent().build();
+            //return ResponseEntity.noContent().build();
+            return ResponseEntity.ok("Dish deleted successfully");
         } else {
             return ResponseEntity.notFound().build();
         }
