@@ -1,5 +1,6 @@
 package vn.edu.likelion.OrderManagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,6 +36,7 @@ public class UserEntity extends BaseEntity implements Serializable {
     private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<OrderEntity> orders;
 
     @Override

@@ -52,11 +52,12 @@ public class TableController {
 
     // Delete Table
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTable(@PathVariable int id) {
+    public ResponseEntity<String> deleteTable(@PathVariable int id) {
         TableEntity tableEntity = tableService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Delete table successfully"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Table not found!"));
         tableService.delete(tableEntity);
-        return ResponseEntity.noContent().build();
+        //return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Table deleted successfully.");
     }
 
     // Table sorting

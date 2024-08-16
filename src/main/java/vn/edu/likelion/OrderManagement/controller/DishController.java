@@ -5,10 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import vn.edu.likelion.OrderManagement.entity.CategoryEntity;
 import vn.edu.likelion.OrderManagement.entity.DishEntity;
+import vn.edu.likelion.OrderManagement.model.CreateDish;
+import vn.edu.likelion.OrderManagement.service.CategoryService;
 import vn.edu.likelion.OrderManagement.service.DishService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/auth/dishes")
@@ -16,6 +20,8 @@ public class DishController {
 
     @Autowired
     private DishService dishService;
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<List<DishEntity>> getAllDishes() {
@@ -31,8 +37,16 @@ public class DishController {
     }
 
     @PostMapping
-    public ResponseEntity<DishEntity> createDish(@RequestBody DishEntity dish) {
-        DishEntity createdDish = dishService.create(dish);
+    public ResponseEntity<DishEntity> createDish(@RequestBody CreateDish dish) {
+        Optional<CategoryEntity> category = categoryService.findById(dish.getCategory_id());
+        DishEntity dishEntity = new DishEntity();
+        dishEntity.setName(dish.getName());
+        dishEntity.setDescription(dish.getDescription());
+        dishEntity.setPrice(Double.parseDouble(dish.getPrice()));
+        dishEntity.setImage(dish.getImage());
+        dishEntity.setStatus(dish.isStatus());
+        dishEntity.setCategory(category.get());
+        DishEntity createdDish = dishService.create(dishEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDish);
     }
 
