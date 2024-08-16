@@ -8,7 +8,6 @@ import org.springframework.web.server.ResponseStatusException;
 import vn.edu.likelion.OrderManagement.entity.TableEntity;
 import vn.edu.likelion.OrderManagement.service.TableService;
 
-import java.util.Iterator;
 import java.util.List;
 
 /*
@@ -53,10 +52,17 @@ public class TableController {
 
     // Delete Table
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTable(@PathVariable int id) {
+    public ResponseEntity<String> deleteTable(@PathVariable int id) {
         TableEntity tableEntity = tableService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Delete table successfully"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Table not found!"));
         tableService.delete(tableEntity);
-        return ResponseEntity.noContent().build();
+        //return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Table deleted successfully.");
+    }
+
+    // Table sorting
+    @GetMapping("/sort")
+    public ResponseEntity<List<TableEntity>> sortTable() {
+        return  ResponseEntity.ok((tableService.sortTable()));
     }
 }
