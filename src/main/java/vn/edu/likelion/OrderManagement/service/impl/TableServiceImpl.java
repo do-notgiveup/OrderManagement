@@ -52,4 +52,11 @@ public class TableServiceImpl implements TableService {
     public Optional<TableEntity> findById(int id) {
         return tableRepository.findById(id);
     }
+
+    @Override
+    public List<TableEntity> sortTable() {
+        List<TableEntity> list = tableRepository.findAll();
+        list.sort((b1, b2) -> Double.compare(b1.getId(), b2.getId()));
+        return list;
+    }
 }

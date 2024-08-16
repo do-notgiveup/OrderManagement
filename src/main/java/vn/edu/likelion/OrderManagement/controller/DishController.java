@@ -11,7 +11,7 @@ import vn.edu.likelion.OrderManagement.service.DishService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/dishes")
+@RequestMapping("/api/v1/auth/dishes")
 public class DishController {
 
     @Autowired
