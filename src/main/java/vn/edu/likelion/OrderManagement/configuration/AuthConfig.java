@@ -3,6 +3,7 @@ package vn.edu.likelion.OrderManagement.configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -24,12 +25,8 @@ import vn.edu.likelion.OrderManagement.service.impl.UserServiceImpl;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class AuthConfig {
-
-    // phai dc tat truoc khi public Error *********************************
-    private final String[] PUBLIC_SWAGGER = {"/swagger-ui/*","/swagger-ui-custom.html"
-            , "/v3/api-docs/*", "/api-docs/*","/api-docs"};
-
     @Autowired
+    @Lazy
     private JwtAuthFilter authFilter;
 
     // User Creation
@@ -38,16 +35,26 @@ public class AuthConfig {
         return new UserServiceImpl();
     }
 
+//    @Bean
+//    public UserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
+//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//        manager.createUser(User.withUsername("user")
+//                .password(passwordEncoder.encode("password"))
+//                .roles("USER")
+//                .build());
+//        return manager;
+//    }
+
     // Configuring HttpSecurity
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken", "/api/v1").permitAll()
-                        .requestMatchers(PUBLIC_SWAGGER).permitAll()
-                        .requestMatchers("https://merely-topical-starling.ngrok-free.app/**").permitAll()
-                        .requestMatchers("http://merely-topical-starling.ngrok-free.app/**").permitAll())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/user/**").authenticated())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/admin/**").authenticated())
+
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/welcome", "/api/v1/auth/register",
+                        "/api/v1/auth/login", "/api/v1/auth/**").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/staff/**").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/admin/**").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/upload/**").authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
