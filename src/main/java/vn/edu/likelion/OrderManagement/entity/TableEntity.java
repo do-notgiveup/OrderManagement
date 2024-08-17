@@ -21,9 +21,11 @@ public class TableEntity extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    // tên bàn
     @Column
     private String name;
 
+    // trạng thái bàn đang bận hay rảnh (0: rảnh, 1: bận)
     @Column
     private boolean status;
 
