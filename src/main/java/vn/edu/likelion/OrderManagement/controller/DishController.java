@@ -38,14 +38,16 @@ public class DishController {
 
     @PostMapping
     public ResponseEntity<DishEntity> createDish(@RequestBody CreateDish dish) {
-        Optional<CategoryEntity> category = categoryService.findById(dish.getCategory_id());
+        CategoryEntity category = categoryService.findById(dish.getCategory_id())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found")); // Check category
+
         DishEntity dishEntity = new DishEntity();
         dishEntity.setName(dish.getName());
         dishEntity.setDescription(dish.getDescription());
         dishEntity.setPrice(Double.parseDouble(dish.getPrice()));
         dishEntity.setImage(dish.getImage());
         dishEntity.setStatus(dish.isStatus());
-        dishEntity.setCategory(category.get());
+        dishEntity.setCategory(category);
         DishEntity createdDish = dishService.create(dishEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDish);
     }
@@ -59,21 +61,34 @@ public class DishController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDish(@PathVariable int id) {
-        DishEntity dish = new DishEntity();
-        dish.setId(id);
-        boolean deleted = dishService.delete(dish);
-        if (deleted) {
-            //return ResponseEntity.noContent().build();
+        Optional<DishEntity> dishOptional = dishService.findById(id);
+        if (dishOptional.isPresent()) {
+            dishService.delete(dishOptional.get());
             return ResponseEntity.ok("Dish deleted successfully");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // Get dish by Câtgory
+    // Get dish by Category
     @GetMapping("/by-category/{categoryId}")
-    public ResponseEntity<List<DishEntity>> getDishesByCategory(@PathVariable Integer categoryId) {
+    public ResponseEntity<List<DishEntity>> getDishesByCategory(@PathVariable int categoryId) {
         List<DishEntity> dishes = dishService.getDishesByCategory(categoryId);
         return ResponseEntity.ok(dishes);
     }
+
+    // Get dish by name or description
+    @GetMapping("/search")
+    public ResponseEntity<List<DishEntity>> searchDishes(@RequestParam String keyword) {
+        List<DishEntity> dishes = dishService.searchDishes(keyword);
+        return ResponseEntity.ok(dishes);
+    }
+
+    // Get top seller
+    @GetMapping("/top-selling")
+    public ResponseEntity<List<DishEntity>> getTopSellingDishes() {
+        List<DishEntity> dishes = dishService.getTopSellingDishes();
+        return ResponseEntity.ok(dishes);
+    }
+
 }
