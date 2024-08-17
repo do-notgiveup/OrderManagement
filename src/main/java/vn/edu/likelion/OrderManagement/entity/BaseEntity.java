@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @MappedSuperclass
@@ -17,11 +18,11 @@ public abstract class BaseEntity {
 
     @Column(nullable = true, updatable = false)
     @CreatedDate
-    private Date createTime;
+    private LocalDate createTime = LocalDate.now();
 
     @Column(nullable = true, insertable = false)
     @LastModifiedDate
-    private Date updateTime;
+    private LocalDate updateTime = LocalDate.now();
 
     @Column(nullable = true)
     private boolean isDeleted = false;

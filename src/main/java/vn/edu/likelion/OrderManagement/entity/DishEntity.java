@@ -1,7 +1,5 @@
 package vn.edu.likelion.OrderManagement.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,18 +21,23 @@ public class DishEntity extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    // tên món ăn
     @Column
     private String name;
 
+    // mô tả của món ăn
     @Column
     private String description;
 
+    // giá của món
     @Column
     private double price;
 
+    // hình ảnh của món ăn
     @Column
     private String image;
 
+    // trạng thái món (0: hết, 1: còn) hoặc (0: tạm nghỉ bán, 1: đang bán)
     @Column
     private boolean status;
 

@@ -23,11 +23,17 @@ public class OrderDetailEntity extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    // số lượng của 1 món
     @Column
     private int quantity;
 
+    // giá của món
     @Column
     private double pricePerItem;
+
+    // ghi chú, vd: tí cay
+    @Column
+    private String note;
 
     @ManyToOne
     @JoinColumn(name = "oder_id", nullable = false)

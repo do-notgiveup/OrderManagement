@@ -80,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
                     .order(orderEntity)
                     .build();
 
-            orderEntity.setPrice(orderDetail.getPricePerItem());
+            orderEntity.setTotalPrice(orderDetail.getPricePerItem());
 
             orderRepository.save(orderEntity);
             orderDetailRepository.save(orderDetail);

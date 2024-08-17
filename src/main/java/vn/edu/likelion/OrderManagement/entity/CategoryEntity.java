@@ -22,6 +22,7 @@ public class CategoryEntity extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    // tên loại món ăn
     @Column
     private String name;
 

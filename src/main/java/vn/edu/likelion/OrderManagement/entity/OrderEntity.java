@@ -24,9 +24,11 @@ public class OrderEntity extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    // tổng giá
     @Column
-    private double price;
+    private double totalPrice;
 
+    // trạng thái đã thanh toán hay chưa (0: chưa, 1: rồi)
     @Column
     private boolean status;
 
@@ -37,9 +39,14 @@ public class OrderEntity extends BaseEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonManagedReference    private UserEntity user;
+    @JsonManagedReference
+    private UserEntity user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private List<OrderDetailEntity> orderDetails;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private List<InvoiceEntity> invoices;
 }
