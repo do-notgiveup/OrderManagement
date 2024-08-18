@@ -1,8 +1,10 @@
 package vn.edu.likelion.OrderManagement.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.likelion.OrderManagement.entity.DishEntity;
+import vn.edu.likelion.OrderManagement.model.DishDTO;
 import vn.edu.likelion.OrderManagement.repository.DishRepository;
 import vn.edu.likelion.OrderManagement.repository.OrderDetailRepository;
 import vn.edu.likelion.OrderManagement.service.DishService;
@@ -28,6 +30,12 @@ public class DishServiceImpl implements DishService {
     private OrderDetailRepository orderDetailRepository;
 
     @Override
+    public DishDTO createDish(DishEntity dishEntity) {
+        DishEntity createdDish = dishRepository.save(dishEntity);
+        return convertToDTO(createdDish);
+    }
+
+    @Override
     public DishEntity create(DishEntity dishEntity) {
         return dishRepository.save(dishEntity);
     }
@@ -47,7 +55,7 @@ public class DishServiceImpl implements DishService {
             dishRepository.delete(dishEntity);
             return true;
         } else {
-            return false;
+            throw new EntityNotFoundException("Dish not found with id: " + dishEntity.getId());
         }
     }
 
@@ -61,32 +69,69 @@ public class DishServiceImpl implements DishService {
         return dishRepository.findById(id);
     }
 
-    public List<DishEntity> getDishesByCategory(int categoryId) {
-        return dishRepository.findByCategoryId(categoryId);
+    @Override
+    public List<DishDTO> findAllDishes() {
+        List<DishEntity> dishEntities = dishRepository.findAll();
+        return dishEntities.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<DishEntity> searchDishes(String keyword) {
-        return dishRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword);
+    public DishDTO findByDishId(int id) {
+        return dishRepository.findById(id)
+                .map(this::convertToDTO)
+                .orElse(null);
     }
 
     @Override
-    public List<DishEntity> getTopSellingDishes() {
+    public List<DishDTO> getDishesByCategory(int categoryId) {
+        List<DishEntity> dishEntities = dishRepository.findByCategoryId(categoryId);
+        return dishEntities.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DishDTO> searchDishes(String keyword) {
+        List<DishEntity> dishEntities = dishRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword);
+        return dishEntities.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DishDTO> getTopSellingDishes() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime thirtyDaysAgo = now.minusDays(30);
-
         // Query total sold 30 days ago
         List<Object[]> result = orderDetailRepository.findTopSellingDishes(thirtyDaysAgo, now);
 
-        // Convert to List<DishEntity>
-        List<DishEntity> topSellingDishes = result.stream()
+        List<DishDTO> topSellingDishes = result.stream()
                 .map(row -> {
                     DishEntity dish = (DishEntity) row[0];
-                    int quantitySold = (int) row[1];
-                    return dish;
+                    Long quantitySold = (Long) row[1];
+                    return convertToDTO(dish);
                 })
                 .collect(Collectors.toList());
-        return topSellingDishes;
 
+        return topSellingDishes;
+    }
+
+    // convertToDTO
+    private DishDTO convertToDTO(DishEntity dishEntity) {
+        DishDTO dishDTO = new DishDTO();
+        dishDTO.setId(dishEntity.getId());
+        dishDTO.setName(dishEntity.getName());
+        dishDTO.setDescription(dishEntity.getDescription());
+        dishDTO.setPrice(dishEntity.getPrice());
+        dishDTO.setImage(dishEntity.getImage());
+        dishDTO.setStatus(dishEntity.isStatus());
+
+        if (dishEntity.getCategory() != null) {
+            dishDTO.setCategoryId(dishEntity.getCategory().getId());
+        }
+
+        return dishDTO;
     }
 }

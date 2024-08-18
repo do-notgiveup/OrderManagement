@@ -29,7 +29,7 @@ public class InvoiceController {
     private ReportService reportService;
 
     // Tim tat ca hoa don trong ngay
-    @GetMapping("/by-date")
+    @GetMapping("/bydate")
     public ResponseEntity<List<InvoiceEntity>> getInvoicesByDate(@RequestParam LocalDate date) {
         List<InvoiceEntity> invoices = invoiceService.getInvoicesByDate(date);
         return ResponseEntity.ok(invoices);

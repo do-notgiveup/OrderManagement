@@ -27,7 +27,7 @@ public class ReportService {
 
     public ByteArrayInputStream exportInvoicesByMonth(int year, int month) {
         List<InvoiceEntity> invoices = invoiceService.getInvoicesByMonth(year, month);
-        return exportInvoicesToExcel(invoices, "Invoices for " + month + "/" + year);
+        return exportInvoicesToExcel(invoices, "Invoices for " + month + "_" + year);
     }
 
     public ByteArrayInputStream exportInvoicesByDateRange(LocalDateTime startDate, LocalDateTime endDate) {

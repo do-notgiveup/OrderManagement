@@ -27,6 +27,5 @@ public class CategoryEntity extends BaseEntity implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
     private List<DishEntity> dishes;
 }

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import vn.edu.likelion.OrderManagement.entity.TableEntity;
+import vn.edu.likelion.OrderManagement.model.TableDTO;
 import vn.edu.likelion.OrderManagement.service.TableService;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class TableController {
     private TableService tableService;
 
     @GetMapping
-    public ResponseEntity<List<TableEntity>> getAllTable() {
-        return ResponseEntity.ok(tableService.findAll());
+    public ResponseEntity<List<TableDTO>> getAllTable() {
+        return ResponseEntity.ok(tableService.findAllTables());
     }
 
     // Get table by Id
@@ -45,6 +46,9 @@ public class TableController {
     // Update Table Infor
     @PutMapping("/{id}")
     public ResponseEntity<TableEntity> updateTable(@PathVariable int id, @RequestBody TableEntity table) {
+        // Check table exist
+        tableService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Table not found!"));
         table.setId(id);
         TableEntity updatedTable = tableService.update(table);
         return ResponseEntity.ok(updatedTable);
