@@ -28,7 +28,7 @@ public class InvoiceEntity extends BaseEntity implements Serializable {
 
     // tổng số lượng bao nhiêu
     @Column
-    private int totalAmount;
+    private double totalAmount;
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
