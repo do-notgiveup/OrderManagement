@@ -2,7 +2,6 @@ package vn.edu.likelion.OrderManagement.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.edu.likelion.OrderManagement.entity.DishEntity;
 import vn.edu.likelion.OrderManagement.entity.TableEntity;
 import vn.edu.likelion.OrderManagement.model.TableDTO;
 import vn.edu.likelion.OrderManagement.repository.TableRepository;
@@ -24,8 +23,17 @@ public class TableServiceImpl implements TableService {
     private TableRepository tableRepository;
 
     @Override
-    public TableEntity create(TableEntity tableEntity) {
-        return tableRepository.save(tableEntity);
+    public TableEntity createTable(TableDTO tableDTO) {
+        TableEntity newTableEntity =  TableEntity.builder()
+                .name(tableDTO.getName())
+                .status(tableDTO.isStatus())
+                .build();
+        return tableRepository.save(newTableEntity);
+    }
+
+    @Override
+    public TableEntity create(TableEntity table) {
+        return tableRepository.save(table);
     }
 
     @Override

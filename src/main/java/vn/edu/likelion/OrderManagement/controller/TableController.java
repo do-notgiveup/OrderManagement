@@ -38,8 +38,8 @@ public class TableController {
 
     // Create Table
     @PostMapping
-    public ResponseEntity<TableEntity> createTable(@RequestBody TableEntity table) {
-        TableEntity createdTable = tableService.create(table);
+    public ResponseEntity<TableEntity> createTable(@RequestBody TableDTO table) {
+        TableEntity createdTable = tableService.createTable(table);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTable);
     }
 
