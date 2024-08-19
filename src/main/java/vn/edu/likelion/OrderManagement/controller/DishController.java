@@ -1,6 +1,7 @@
 package vn.edu.likelion.OrderManagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import vn.edu.likelion.OrderManagement.model.DishDTO;
 import vn.edu.likelion.OrderManagement.service.CategoryService;
 import vn.edu.likelion.OrderManagement.service.DishService;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +27,11 @@ public class DishController {
     private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<DishDTO>> getAllDishes() {
-        List<DishDTO> dishes = dishService.findAllDishes();
+    public ResponseEntity<Page<DishDTO>> getAllDishes(@RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "5") int size,
+                                                      @RequestParam(defaultValue = "id") String sortBy,
+                                                      @RequestParam(defaultValue = "asc") String sortDirection) {
+        Page<DishDTO> dishes = dishService.findAllDishes(page, size, sortBy, sortDirection);
         return ResponseEntity.ok(dishes);
     }
 

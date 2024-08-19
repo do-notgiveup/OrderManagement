@@ -4,7 +4,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.edu.likelion.OrderManagement.entity.InvoiceEntity;
+import vn.edu.likelion.OrderManagement.model.InvoiceDTO;
 import vn.edu.likelion.OrderManagement.service.InvoiceService;
 
 import java.io.ByteArrayInputStream;
@@ -21,22 +21,22 @@ public class ReportService {
     private InvoiceService invoiceService;
 
     public ByteArrayInputStream exportInvoicesByDate(LocalDate date) {
-        List<InvoiceEntity> invoices = invoiceService.getInvoicesByDate(date);
+        List<InvoiceDTO> invoices = invoiceService.getInvoicesByDate(date);
         return exportInvoicesToExcel(invoices, "Invoices for " + date);
     }
 
     public ByteArrayInputStream exportInvoicesByMonth(int year, int month) {
-        List<InvoiceEntity> invoices = invoiceService.getInvoicesByMonth(year, month);
+        List<InvoiceDTO> invoices = invoiceService.getInvoicesByMonth(year, month);
         return exportInvoicesToExcel(invoices, "Invoices for " + month + "_" + year);
     }
 
     public ByteArrayInputStream exportInvoicesByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        List<InvoiceEntity> invoices = invoiceService.getInvoicesByDateRange(startDate, endDate);
+        List<InvoiceDTO> invoices = invoiceService.getInvoicesByDateRange(startDate, endDate);
         return exportInvoicesToExcel(invoices, "Invoices from " + startDate + " to " + endDate);
     }
 
     // Phương thức private chung để xuất file Excel
-    private ByteArrayInputStream exportInvoicesToExcel(List<InvoiceEntity> invoices, String sheetName) {
+    private ByteArrayInputStream exportInvoicesToExcel(List<InvoiceDTO> invoices, String sheetName) {
         try (Workbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet(sheetName);
@@ -58,7 +58,7 @@ public class ReportService {
             // Get data
             int rowNum = 1;
             double totalAmount = 0.0;
-            for (InvoiceEntity invoice : invoices) {
+            for (InvoiceDTO invoice : invoices) {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(invoice.getId());
                 row.createCell(1).setCellValue(invoice.getInvoiceDate().toString());
