@@ -47,9 +47,9 @@ public class InvoiceController {
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate
     ) {
-        LocalDateTime startOfDay = startDate.atStartOfDay();
-        LocalDateTime endOfDay = endDate.atTime(23, 59, 59);
-        List<InvoiceEntity> invoices = invoiceService.getInvoicesByDateRange(startOfDay, endOfDay);
+//        LocalDateTime startOfDay = startDate.atStartOfDay();
+//        LocalDateTime endOfDay = endDate.atTime(23, 59, 59);
+        List<InvoiceEntity> invoices = invoiceService.getInvoicesByDateRange(startDate, endDate);
         return ResponseEntity.ok(invoices.stream()
                 .map(this::convertToInvoiceDTO)
                 .collect(Collectors.toList()));
@@ -83,9 +83,9 @@ public class InvoiceController {
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate
     ) throws IOException {
-        LocalDateTime startOfDay = startDate.atStartOfDay();
-        LocalDateTime endOfDay = endDate.atTime(23, 59, 59);
-        ByteArrayInputStream in = reportService.exportInvoicesByDateRange(startOfDay, endOfDay);
+//        LocalDateTime startOfDay = startDate.atStartOfDay();
+//        LocalDateTime endOfDay = endDate.atTime(23, 59, 59);
+        ByteArrayInputStream in = reportService.exportInvoicesByDateRange(startDate, endDate);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=invoices_" + startDate + "_to_" + endDate + ".xlsx");
         return ResponseEntity.ok()

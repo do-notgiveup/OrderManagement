@@ -10,7 +10,7 @@ public interface InvoiceService extends BaseCRUD<InvoiceEntity> {
 
     List<InvoiceEntity> getInvoicesByDate(LocalDate date);
 
-    List<InvoiceEntity> getInvoicesByDateRange(LocalDateTime startDate, LocalDateTime endDate);
+    List<InvoiceEntity> getInvoicesByDateRange(LocalDate startDate, LocalDate endDate);
 
     List<InvoiceEntity> getInvoicesByMonth(int year, int month);
 }

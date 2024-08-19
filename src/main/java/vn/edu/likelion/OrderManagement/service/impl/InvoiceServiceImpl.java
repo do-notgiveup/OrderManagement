@@ -23,7 +23,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<InvoiceEntity> getInvoicesByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+    public List<InvoiceEntity> getInvoicesByDateRange(LocalDate startDate, LocalDate endDate) {
         return invoiceRepository.findByInvoiceDateBetween(startDate, endDate);
     }
 
