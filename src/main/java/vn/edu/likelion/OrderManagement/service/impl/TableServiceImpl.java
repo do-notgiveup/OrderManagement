@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.likelion.OrderManagement.entity.DishEntity;
 import vn.edu.likelion.OrderManagement.entity.TableEntity;
+import vn.edu.likelion.OrderManagement.model.TableDTO;
 import vn.edu.likelion.OrderManagement.repository.TableRepository;
 import vn.edu.likelion.OrderManagement.service.TableService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /*
  * OrderManager - Manage Table (CRUD)
@@ -51,6 +53,23 @@ public class TableServiceImpl implements TableService {
     @Override
     public Optional<TableEntity> findById(int id) {
         return tableRepository.findById(id);
+    }
+
+    @Override
+    public List<TableDTO> findAllTables() {
+        List<TableEntity> tableEntities = tableRepository.findAll();
+        return tableEntities.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    //convertToDTO
+    private TableDTO convertToDTO(TableEntity tableEntity) {
+        TableDTO tableDTO = new TableDTO();
+        tableDTO.setId(tableEntity.getId());
+        tableDTO.setName(tableEntity.getName());
+        tableDTO.setStatus(tableEntity.isStatus());
+        return tableDTO;
     }
 
     @Override

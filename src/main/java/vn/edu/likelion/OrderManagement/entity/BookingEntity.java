@@ -48,7 +48,6 @@ public class BookingEntity extends BaseEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonManagedReference
     private UserEntity user;
 
 }
