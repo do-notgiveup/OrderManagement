@@ -86,6 +86,7 @@ public class OrderServiceImpl implements OrderService {
                     .quantity(orderDetailRequest.getQuantity())
                     .pricePerItem(orderDetailRequest.getPricePerItem())
                     .dish(dishRepository.findById(orderDetailRequest.getDishId()).get())
+                    .note(orderDetailRequest.getNote())
                     .order(orderEntity)
                     .build();
 
