@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import vn.edu.likelion.OrderManagement.entity.DishEntity;
 import vn.edu.likelion.OrderManagement.entity.InvoiceEntity;
+import vn.edu.likelion.OrderManagement.model.DishDTO;
+import vn.edu.likelion.OrderManagement.model.InvoiceDTO;
 import vn.edu.likelion.OrderManagement.service.InvoiceService;
 import vn.edu.likelion.OrderManagement.service.impl.ReportService;
 
@@ -18,6 +21,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/auth/invoices")
@@ -30,31 +34,37 @@ public class InvoiceController {
 
     // Tim tat ca hoa don trong ngay
     @GetMapping("/bydate")
-    public ResponseEntity<List<InvoiceEntity>> getInvoicesByDate(@RequestParam LocalDate date) {
+    public ResponseEntity<List<InvoiceDTO>> getInvoicesByDate(@RequestParam LocalDate date) {
         List<InvoiceEntity> invoices = invoiceService.getInvoicesByDate(date);
-        return ResponseEntity.ok(invoices);
+        return ResponseEntity.ok(invoices.stream()
+                .map(this::convertToInvoiceDTO)
+                .collect(Collectors.toList()));
     }
 
     // tat ca hoa don trong 1 khoan thoi gian
     @GetMapping("/by-date-range")
-    public ResponseEntity<List<InvoiceEntity>> getInvoicesByDateRange(
+    public ResponseEntity<List<InvoiceDTO>> getInvoicesByDateRange(
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate
     ) {
         LocalDateTime startOfDay = startDate.atStartOfDay();
         LocalDateTime endOfDay = endDate.atTime(23, 59, 59);
         List<InvoiceEntity> invoices = invoiceService.getInvoicesByDateRange(startOfDay, endOfDay);
-        return ResponseEntity.ok(invoices);
+        return ResponseEntity.ok(invoices.stream()
+                .map(this::convertToInvoiceDTO)
+                .collect(Collectors.toList()));
     }
 
     // tat ca hoa don trong thang
     @GetMapping("/by-month")
-    public ResponseEntity<List<InvoiceEntity>> getInvoicesByMonth(
+    public ResponseEntity<List<InvoiceDTO>> getInvoicesByMonth(
             @RequestParam int year,
             @RequestParam int month
     ) {
         List<InvoiceEntity> invoices = invoiceService.getInvoicesByMonth(year, month);
-        return ResponseEntity.ok(invoices);
+        return ResponseEntity.ok(invoices.stream()
+                .map(this::convertToInvoiceDTO)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/export/by-date/excel")
@@ -94,5 +104,16 @@ public class InvoiceController {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(new InputStreamResource(in));
+    }
+
+    // convertToDTO for InvoiceDTO
+    private InvoiceDTO convertToInvoiceDTO(InvoiceEntity invoiceEntity) {
+        InvoiceDTO invoiceDTO = new InvoiceDTO();
+        invoiceDTO.setId(invoiceEntity.getId());
+        invoiceDTO.setOrderId(invoiceEntity.getOrder().getId());
+        invoiceDTO.setInvoiceDate(invoiceEntity.getInvoiceDate());
+        invoiceDTO.setTotalAmount(invoiceEntity.getTotalAmount());
+
+        return invoiceDTO;
     }
 }

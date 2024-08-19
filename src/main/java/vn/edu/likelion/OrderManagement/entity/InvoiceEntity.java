@@ -32,7 +32,6 @@ public class InvoiceEntity extends BaseEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
-    @JsonManagedReference
     private OrderEntity order;
 
 }

@@ -110,7 +110,7 @@ public class DishServiceImpl implements DishService {
         List<DishDTO> topSellingDishes = result.stream()
                 .map(row -> {
                     DishEntity dish = (DishEntity) row[0];
-                    Long quantitySold = (Long) row[1];
+                    int quantitySold = (int) row[1];
                     return convertToDTO(dish);
                 })
                 .collect(Collectors.toList());

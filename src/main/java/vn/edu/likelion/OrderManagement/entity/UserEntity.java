@@ -36,11 +36,9 @@ public class UserEntity extends BaseEntity implements Serializable {
     private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
     private List<OrderEntity> orders;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
     private List<BookingEntity> bookings;
 
     @Override
