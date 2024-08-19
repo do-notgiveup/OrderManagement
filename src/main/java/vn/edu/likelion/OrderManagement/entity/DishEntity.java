@@ -43,6 +43,5 @@ public class DishEntity extends BaseEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonManagedReference
     private CategoryEntity category;
 }

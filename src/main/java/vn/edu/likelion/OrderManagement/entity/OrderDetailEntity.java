@@ -37,11 +37,9 @@ public class OrderDetailEntity extends BaseEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "oder_id", nullable = false)
-    @JsonManagedReference
     private OrderEntity order;
 
     @ManyToOne
     @JoinColumn(name = "dish_id", nullable = false)
-    @JsonManagedReference
     private DishEntity dish;
 }
