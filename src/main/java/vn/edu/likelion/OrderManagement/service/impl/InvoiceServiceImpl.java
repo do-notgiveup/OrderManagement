@@ -33,7 +33,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<InvoiceDTO> getInvoicesByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+    public List<InvoiceDTO> getInvoicesByDateRange(LocalDate startDate, LocalDate endDate) {
         return invoiceRepository.findByInvoiceDateBetween(startDate, endDate).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

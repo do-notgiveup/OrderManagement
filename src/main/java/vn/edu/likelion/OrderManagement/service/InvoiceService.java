@@ -13,7 +13,7 @@ public interface InvoiceService extends BaseCRUD<InvoiceEntity> {
 
     List<InvoiceDTO> getInvoicesByDate(LocalDate date);
 
-    List<InvoiceDTO> getInvoicesByDateRange(LocalDateTime startDate, LocalDateTime endDate);
+    List<InvoiceDTO> getInvoicesByDateRange(LocalDate startDate, LocalDate endDate);
 
     List<InvoiceDTO> getInvoicesByMonth(int year, int month);
 

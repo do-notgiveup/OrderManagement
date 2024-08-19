@@ -30,8 +30,9 @@ public class ReportService {
         return exportInvoicesToExcel(invoices, "Invoices for " + month + "_" + year);
     }
 
-    public ByteArrayInputStream exportInvoicesByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+    public ByteArrayInputStream exportInvoicesByDateRange(LocalDate startDate, LocalDate endDate) {
         List<InvoiceDTO> invoices = invoiceService.getInvoicesByDateRange(startDate, endDate);
+
         return exportInvoicesToExcel(invoices, "Invoices from " + startDate + " to " + endDate);
     }
 
