@@ -22,7 +22,7 @@ public interface InvoiceRepository extends JpaRepository<InvoiceEntity, Integer>
     // Tim tat ca hoa don trong 1 thoi gian cu the
     @Query("SELECT i FROM InvoiceEntity i " +
             "WHERE i.invoiceDate BETWEEN :startDate AND :endDate")
-    List<InvoiceEntity> findByInvoiceDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+    List<InvoiceEntity> findByInvoiceDateBetween(LocalDate startDate, LocalDate endDate);
 
     // Tim tat ca hoa don trong 1 thang cu the
     @Query("SELECT i FROM InvoiceEntity i WHERE YEAR(i.invoiceDate) = :year AND MONTH(i.invoiceDate) = :month")

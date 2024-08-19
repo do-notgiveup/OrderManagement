@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "tbl_invoice")
@@ -24,7 +24,7 @@ public class InvoiceEntity extends BaseEntity implements Serializable {
 
     // ngày của invoice
     @Column
-    private LocalDateTime invoiceDate;
+    private LocalDate invoiceDate;
 
     // tổng số lượng bao nhiêu
     @Column
