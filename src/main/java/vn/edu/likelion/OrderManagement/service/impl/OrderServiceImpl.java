@@ -1,7 +1,9 @@
 package vn.edu.likelion.OrderManagement.service.impl;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vn.edu.likelion.OrderManagement.entity.InvoiceEntity;
 import vn.edu.likelion.OrderManagement.entity.OrderEntity;
 
 import vn.edu.likelion.OrderManagement.model.OrderDetailRequest;
@@ -9,6 +11,7 @@ import vn.edu.likelion.OrderManagement.model.OrderRequest;
 import vn.edu.likelion.OrderManagement.repository.*;
 import vn.edu.likelion.OrderManagement.service.OrderService;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import vn.edu.likelion.OrderManagement.entity.OrderDetailEntity;
@@ -29,8 +32,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private DishRepository dishRepository;
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
 
     @Override
     public OrderEntity create(OrderEntity orderEntity) {
@@ -64,6 +71,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderEntity createOrder(OrderRequest order) {
+        //Set data order
         OrderEntity orderEntity = OrderEntity.builder()
                 .user(userRepository.findById(order.getUserId())
                         .orElseThrow(() -> new RuntimeException("UserId not found")))
@@ -72,6 +80,7 @@ public class OrderServiceImpl implements OrderService {
                         .orElseThrow(() -> new RuntimeException("TableId not found")))
                 .build();
 
+        // Set data orderDetail
         for (OrderDetailRequest orderDetailRequest : order.getOrderDetailRequests()) {
             OrderDetailEntity orderDetail = OrderDetailEntity.builder()
                     .quantity(orderDetailRequest.getQuantity())
@@ -80,11 +89,21 @@ public class OrderServiceImpl implements OrderService {
                     .order(orderEntity)
                     .build();
 
-            orderEntity.setTotalPrice(orderDetail.getPricePerItem());
+            orderEntity.setTotalPrice(orderEntity.getTotalPrice()
+                    + orderDetail.getPricePerItem() * orderDetail.getQuantity());
 
             orderRepository.save(orderEntity);
             orderDetailRepository.save(orderDetail);
         }
+
+        // Set data Invoice
+        InvoiceEntity invoiceEntity = InvoiceEntity.builder()
+                .invoiceDate(LocalDateTime.now())
+                .order(orderEntity)
+                .totalAmount(orderEntity.getTotalPrice())
+                .build();
+        invoiceRepository.save(invoiceEntity);
+
         return orderEntity;
     }
 }
