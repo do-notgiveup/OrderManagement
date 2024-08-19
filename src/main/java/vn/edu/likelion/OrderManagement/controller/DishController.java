@@ -10,6 +10,7 @@ import vn.edu.likelion.OrderManagement.entity.CategoryEntity;
 import vn.edu.likelion.OrderManagement.entity.DishEntity;
 import vn.edu.likelion.OrderManagement.model.CreateDish;
 import vn.edu.likelion.OrderManagement.model.DishDTO;
+import vn.edu.likelion.OrderManagement.model.TopSellingDishDTO;
 import vn.edu.likelion.OrderManagement.service.CategoryService;
 import vn.edu.likelion.OrderManagement.service.DishService;
 
@@ -100,8 +101,8 @@ public class DishController {
 
     // Get top seller
     @GetMapping("/topselling")
-    public ResponseEntity<List<DishDTO>> getTopSellingDishes() {
-        List<DishDTO> dishes = dishService.getTopSellingDishes();
+    public ResponseEntity<List<TopSellingDishDTO>> getTopSellingDishes() {
+        List<TopSellingDishDTO> dishes = dishService.getTopSellingDishes();
         return ResponseEntity.ok(dishes);
     }
 

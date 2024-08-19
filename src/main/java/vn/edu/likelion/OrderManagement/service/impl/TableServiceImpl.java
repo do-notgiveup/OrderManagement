@@ -81,9 +81,11 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public List<TableEntity> sortTable() {
+    public List<TableDTO> sortTable() {
         List<TableEntity> list = tableRepository.findAll();
         list.sort((b1, b2) -> Double.compare(b1.getId(), b2.getId()));
-        return list;
+        return list.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 }

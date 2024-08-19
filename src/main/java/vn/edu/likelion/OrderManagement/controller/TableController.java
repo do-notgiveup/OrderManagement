@@ -66,7 +66,7 @@ public class TableController {
 
     // Table sorting
     @GetMapping("/sort")
-    public ResponseEntity<List<TableEntity>> sortTable() {
+    public ResponseEntity<List<TableDTO>> sortTable() {
         return  ResponseEntity.ok((tableService.sortTable()));
     }
 }
