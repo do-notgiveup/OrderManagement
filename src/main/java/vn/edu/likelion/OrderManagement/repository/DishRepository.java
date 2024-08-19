@@ -1,5 +1,7 @@
 package vn.edu.likelion.OrderManagement.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import vn.edu.likelion.OrderManagement.entity.DishEntity;
@@ -18,4 +20,6 @@ public interface DishRepository extends JpaRepository<DishEntity, Integer> {
     List<DishEntity> findByPriceBetween(double minPrice, double maxPrice);
 
     List<DishEntity> findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String nameKeyword, String descriptionKeyword);
+
+    Page<DishEntity> findAll(Pageable pageable);
 }
