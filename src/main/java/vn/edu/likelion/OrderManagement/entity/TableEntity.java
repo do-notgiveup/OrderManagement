@@ -10,7 +10,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "tbl_table")
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +17,6 @@ import java.util.List;
 @Setter
 public class TableEntity extends BaseEntity implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = 1L;
 
     // tên bàn
@@ -30,6 +28,5 @@ public class TableEntity extends BaseEntity implements Serializable {
     private boolean status;
 
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
     private List<OrderEntity> orders;
 }
