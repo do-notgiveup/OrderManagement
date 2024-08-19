@@ -13,4 +13,7 @@ public class OrderDetailRequest {
 
     // giá của từng món được gọi
     private double pricePerItem;
+
+    // note của món ăn
+    private String note;
 }

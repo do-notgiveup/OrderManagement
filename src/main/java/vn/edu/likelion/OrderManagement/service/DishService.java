@@ -1,10 +1,11 @@
 package vn.edu.likelion.OrderManagement.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import vn.edu.likelion.OrderManagement.entity.DishEntity;
 import vn.edu.likelion.OrderManagement.model.DishDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface DishService extends BaseCRUD<DishEntity> {
 //    List<DishEntity> getDishesByCategory(int categoryId);   // Get dish by Category
@@ -12,7 +13,7 @@ public interface DishService extends BaseCRUD<DishEntity> {
 //    List<DishEntity> getTopSellingDishes(); // Get top seller
 
     DishDTO createDish(DishEntity dishEntity);
-    List<DishDTO> findAllDishes();
+    Page<DishDTO> findAllDishes(int page, int size, String sortBy, String sortDirection);
     DishDTO findByDishId(int id);
     List<DishDTO> getDishesByCategory(int categoryId);
 

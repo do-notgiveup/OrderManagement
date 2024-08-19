@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface TableService extends BaseCRUD<TableEntity> {
 
+    TableEntity createTable(TableDTO tableDTO);
     List<TableDTO> findAllTables();
     List<TableEntity> sortTable();
 }

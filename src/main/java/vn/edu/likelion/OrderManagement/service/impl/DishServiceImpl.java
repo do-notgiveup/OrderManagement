@@ -2,6 +2,10 @@ package vn.edu.likelion.OrderManagement.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import vn.edu.likelion.OrderManagement.entity.DishEntity;
 import vn.edu.likelion.OrderManagement.model.DishDTO;
@@ -70,11 +74,11 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<DishDTO> findAllDishes() {
-        List<DishEntity> dishEntities = dishRepository.findAll();
-        return dishEntities.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public Page<DishDTO> findAllDishes(int page, int size, String sortBy, String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<DishEntity> dishEntities = dishRepository.findAll(pageable);
+        return dishEntities.map(this::convertToDTO);
     }
 
     @Override
