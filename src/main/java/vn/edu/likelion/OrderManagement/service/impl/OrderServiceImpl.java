@@ -1,6 +1,5 @@
 package vn.edu.likelion.OrderManagement.service.impl;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.likelion.OrderManagement.entity.InvoiceEntity;
@@ -11,7 +10,7 @@ import vn.edu.likelion.OrderManagement.model.OrderRequest;
 import vn.edu.likelion.OrderManagement.repository.*;
 import vn.edu.likelion.OrderManagement.service.OrderService;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import vn.edu.likelion.OrderManagement.entity.OrderDetailEntity;
@@ -99,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
 
         // Set data Invoice
         InvoiceEntity invoiceEntity = InvoiceEntity.builder()
-                .invoiceDate(LocalDateTime.now())
+                .invoiceDate(LocalDate.now())
                 .order(orderEntity)
                 .totalAmount(orderEntity.getTotalPrice())
                 .build();

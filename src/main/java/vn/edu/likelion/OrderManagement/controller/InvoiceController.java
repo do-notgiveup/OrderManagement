@@ -16,7 +16,6 @@ import vn.edu.likelion.OrderManagement.service.impl.ReportService;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -41,9 +40,10 @@ public class InvoiceController {
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate
     ) {
-        LocalDateTime startOfDay = startDate.atStartOfDay();
-        LocalDateTime endOfDay = endDate.atTime(23, 59, 59);
-        List<InvoiceDTO> invoices = invoiceService.getInvoicesByDateRange(startOfDay, endOfDay);
+
+//        LocalDateTime startOfDay = startDate.atStartOfDay();
+//        LocalDateTime endOfDay = endDate.atTime(23, 59, 59);
+        List<InvoiceDTO> invoices = invoiceService.getInvoicesByDateRange(startDate, endDate);
         return ResponseEntity.ok(invoices);
     }
 
@@ -73,9 +73,9 @@ public class InvoiceController {
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate
     ) throws IOException {
-        LocalDateTime startOfDay = startDate.atStartOfDay();
-        LocalDateTime endOfDay = endDate.atTime(23, 59, 59);
-        ByteArrayInputStream in = reportService.exportInvoicesByDateRange(startOfDay, endOfDay);
+//        LocalDateTime startOfDay = startDate.atStartOfDay();
+//        LocalDateTime endOfDay = endDate.atTime(23, 59, 59);
+        ByteArrayInputStream in = reportService.exportInvoicesByDateRange(startDate, endDate);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=invoices_" + startDate + "_to_" + endDate + ".xlsx");
         return ResponseEntity.ok()
