@@ -16,23 +16,25 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = {"http://192.168.18.81:5173", "http://localhost:9999", "jdbc:mysql://viaduct.proxy.rlwy.net:37349/railway"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://192.168.18.81:5173", "http://localhost:9999", "jdbc:mysql://viaduct.proxy.rlwy.net:37349/railway"}
+        , allowCredentials = "true")
 @RequestMapping("/api/v1/auth/invoices")
 public class InvoiceController {
 
+    // Injection
     @Autowired
     private InvoiceService invoiceService;
     @Autowired
     private ReportService reportService;
 
-    // Tim tat ca hoa don trong ngay
+    // File Orders whole day
     @GetMapping("/bydate")
     public ResponseEntity<List<InvoiceDTO>> getInvoicesByDate(@RequestParam LocalDate date) {
         List<InvoiceDTO> invoices = invoiceService.getInvoicesByDate(date);
         return ResponseEntity.ok(invoices);
     }
 
-    // tat ca hoa don trong 1 khoan thoi gian
+    //  File Orders by Date range
     @GetMapping("/by-date-range")
     public ResponseEntity<List<InvoiceDTO>> getInvoicesByDateRange(
             @RequestParam LocalDate startDate,
@@ -45,7 +47,7 @@ public class InvoiceController {
         return ResponseEntity.ok(invoices);
     }
 
-    // tat ca hoa don trong thang
+    // File Orders of a month
     @GetMapping("/by-month")
     public ResponseEntity<List<InvoiceDTO>> getInvoicesByMonth(
             @RequestParam int year,
@@ -55,6 +57,9 @@ public class InvoiceController {
         return ResponseEntity.ok(invoices);
     }
 
+     /*
+      * EXPORT invoices to EXCEL
+      */
     @GetMapping("/export/by-date/excel")
     public ResponseEntity<InputStreamResource> exportInvoicesByDateToExcel(@RequestParam LocalDate date) {
         ByteArrayInputStream in = null;

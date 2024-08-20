@@ -13,7 +13,8 @@ import vn.edu.likelion.OrderManagement.model.AuthRequest;
 import vn.edu.likelion.OrderManagement.service.impl.UserServiceImpl;
 
 @RestController
-@CrossOrigin(origins = {"http://192.168.18.81:5173", "http://localhost:9999", "jdbc:mysql://viaduct.proxy.rlwy.net:37349/railway"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://192.168.18.81:5173", "http://localhost:9999", "jdbc:mysql://viaduct.proxy.rlwy.net:37349/railway"}
+        , allowCredentials = "true")
 @RequestMapping("/api/v1/auth")
 public class UserController {
 

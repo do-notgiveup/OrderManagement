@@ -19,15 +19,18 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = {"http://192.168.18.81:5173", "http://localhost:9999", "jdbc:mysql://viaduct.proxy.rlwy.net:37349/railway"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://192.168.18.81:5173", "http://localhost:9999", "jdbc:mysql://viaduct.proxy.rlwy.net:37349/railway"}
+        , allowCredentials = "true")
 @RequestMapping("/api/v1/auth/dishes")
 public class DishController {
 
+    // Injection
     @Autowired
     private DishService dishService;
     @Autowired
     private CategoryService categoryService;
 
+    // Get All Dishes - Pageable
     @GetMapping
     public ResponseEntity<Page<DishDTO>> getAllDishes(@RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "5") int size,
@@ -37,6 +40,7 @@ public class DishController {
         return ResponseEntity.ok(dishes);
     }
 
+    // Get Dishes via Id
     @GetMapping("/{id}")
     public ResponseEntity<DishDTO> getDishById(@PathVariable int id) {
         DishDTO dish = dishService.findByDishId(id);
@@ -46,6 +50,7 @@ public class DishController {
         return ResponseEntity.ok(dish);
     }
 
+    // Create Dish
     @PostMapping
     public ResponseEntity<DishDTO> createDish(@RequestBody CreateDish dish) {
         CategoryEntity category = categoryService.findById(dish.getCategory_id())
@@ -68,6 +73,7 @@ public class DishController {
         }
     }
 
+    // Update Dish
     @PutMapping("/{id}")
     public ResponseEntity<DishEntity> updateDish(@PathVariable int id, @RequestBody DishEntity dish) {
         dish.setId(id);
@@ -75,6 +81,7 @@ public class DishController {
         return ResponseEntity.ok(updatedDish);
     }
 
+    // Delete Dish
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDish(@PathVariable int id) {
         Optional<DishEntity> dishOptional = dishService.findById(id);

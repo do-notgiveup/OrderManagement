@@ -17,7 +17,8 @@ import java.util.List;
  * Date: 15/8/2024
  */
 @RestController
-@CrossOrigin(origins = {"http://192.168.18.81:5173", "http://localhost:9999", "jdbc:mysql://viaduct.proxy.rlwy.net:37349/railway"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://192.168.18.81:5173", "http://localhost:9999", "jdbc:mysql://viaduct.proxy.rlwy.net:37349/railway"}
+        , allowCredentials = "true")
 @RequestMapping("/api/v1/auth/table")
 public class TableController {
 
