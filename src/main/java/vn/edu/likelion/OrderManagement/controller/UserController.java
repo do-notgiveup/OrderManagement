@@ -13,7 +13,7 @@ import vn.edu.likelion.OrderManagement.model.AuthRequest;
 import vn.edu.likelion.OrderManagement.service.impl.UserServiceImpl;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("/api/v1/auth")
 public class UserController {
 

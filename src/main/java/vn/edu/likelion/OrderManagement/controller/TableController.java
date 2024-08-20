@@ -17,7 +17,7 @@ import java.util.List;
  * Date: 15/8/2024
  */
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("/api/v1/auth/table")
 public class TableController {
 

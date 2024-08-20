@@ -9,7 +9,7 @@ import vn.edu.likelion.OrderManagement.service.TableService;
 import vn.edu.likelion.OrderManagement.service.UserService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("/api/v1/auth/order")
 public class OrderController {
 

@@ -91,7 +91,8 @@ public class TableServiceImpl implements TableService {
     @Override
     public List<TableDTO> sortTable() {
         List<TableEntity> list = tableRepository.findAll();
-        list.sort((b1, b2) -> Double.compare(b1.getId(), b2.getId()));
+        //list.sort((b1, b2) -> Double.compare(b1.getId(), b2.getId()));
+        list.sort((b1, b2) -> b1.getName().compareToIgnoreCase(b2.getName()));
         return list.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

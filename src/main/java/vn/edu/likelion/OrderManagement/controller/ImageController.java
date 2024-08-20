@@ -9,7 +9,7 @@ import vn.edu.likelion.OrderManagement.service.FileUpload;
 
 @RestController
 @RequestMapping("/api/v1/auth/image")
-@CrossOrigin
+@CrossOrigin("*")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ImageController {
 
