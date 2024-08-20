@@ -1,9 +1,9 @@
 package vn.edu.likelion.OrderManagement.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import vn.edu.likelion.OrderManagement.entity.DishEntity;
 import vn.edu.likelion.OrderManagement.model.DishDTO;
+import vn.edu.likelion.OrderManagement.model.TopSellingDishDTO;
 
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface DishService extends BaseCRUD<DishEntity> {
     List<DishDTO> getDishesByCategory(int categoryId);
 
     List<DishDTO> searchDishes(String keyword);
-    List<DishDTO> getTopSellingDishes();
+    List<TopSellingDishDTO> getTopSellingDishes();
 }

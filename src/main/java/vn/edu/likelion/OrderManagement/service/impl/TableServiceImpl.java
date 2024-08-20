@@ -64,6 +64,14 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
+    public Optional<TableDTO> findTableById(int id) {
+        Optional<TableEntity> tableEntity = tableRepository.findById(id);
+        return tableEntity.stream()
+                .map(this::convertToDTO)
+                .findFirst();
+    }
+
+    @Override
     public List<TableDTO> findAllTables() {
         List<TableEntity> tableEntities = tableRepository.findAll();
         return tableEntities.stream()
@@ -81,9 +89,12 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public List<TableEntity> sortTable() {
+    public List<TableDTO> sortTable() {
         List<TableEntity> list = tableRepository.findAll();
-        list.sort((b1, b2) -> Double.compare(b1.getId(), b2.getId()));
-        return list;
+        //list.sort((b1, b2) -> Double.compare(b1.getId(), b2.getId()));
+        list.sort((b1, b2) -> b1.getName().compareToIgnoreCase(b2.getName()));
+        return list.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 }

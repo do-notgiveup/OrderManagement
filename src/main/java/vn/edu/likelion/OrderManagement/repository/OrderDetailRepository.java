@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import vn.edu.likelion.OrderManagement.entity.OrderDetailEntity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -20,5 +20,5 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity, 
             "WHERE od.order.createTime BETWEEN :startTime AND :endTime " +
             "GROUP BY od.dish " +
             "ORDER BY SUM(od.quantity) DESC")
-    List<Object[]> findTopSellingDishes(LocalDateTime startTime, LocalDateTime endTime);
+    List<Object[]> findTopSellingDishes(LocalDate startTime, LocalDate endTime);
 }
