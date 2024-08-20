@@ -64,6 +64,14 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
+    public Optional<TableDTO> findTableById(int id) {
+        Optional<TableEntity> tableEntity = tableRepository.findById(id);
+        return tableEntity.stream()
+                .map(this::convertToDTO)
+                .findFirst();
+    }
+
+    @Override
     public List<TableDTO> findAllTables() {
         List<TableEntity> tableEntities = tableRepository.findAll();
         return tableEntities.stream()

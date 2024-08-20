@@ -5,10 +5,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.edu.likelion.OrderManagement.model.InvoiceDTO;
 import vn.edu.likelion.OrderManagement.service.InvoiceService;
 import vn.edu.likelion.OrderManagement.service.impl.ReportService;
@@ -19,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v1/auth/invoices")
 public class InvoiceController {
 
