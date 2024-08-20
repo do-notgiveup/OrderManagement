@@ -13,8 +13,8 @@ import vn.edu.likelion.OrderManagement.model.AuthRequest;
 import vn.edu.likelion.OrderManagement.service.impl.UserServiceImpl;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v1/auth")
-@CrossOrigin // Adjust as needed
 public class UserController {
 
     @Autowired

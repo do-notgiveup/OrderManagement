@@ -17,6 +17,7 @@ import java.util.List;
  * Date: 15/8/2024
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v1/auth/table")
 public class TableController {
 
@@ -30,8 +31,8 @@ public class TableController {
 
     // Get table by Id
     @GetMapping("/{id}")
-    public ResponseEntity<TableEntity> getById(@PathVariable int id) {
-        TableEntity tableEntity = tableService.findById(id)
+    public ResponseEntity<TableDTO> getById(@PathVariable int id) {
+        TableDTO tableEntity = tableService.findTableById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return ResponseEntity.ok(tableEntity);
     }
@@ -66,7 +67,7 @@ public class TableController {
 
     // Table sorting
     @GetMapping("/sort")
-    public ResponseEntity<List<TableEntity>> sortTable() {
+    public ResponseEntity<List<TableDTO>> sortTable() {
         return  ResponseEntity.ok((tableService.sortTable()));
     }
 }

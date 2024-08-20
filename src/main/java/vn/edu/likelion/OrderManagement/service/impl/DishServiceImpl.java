@@ -9,10 +9,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import vn.edu.likelion.OrderManagement.entity.DishEntity;
 import vn.edu.likelion.OrderManagement.model.DishDTO;
+import vn.edu.likelion.OrderManagement.model.TopSellingDishDTO;
 import vn.edu.likelion.OrderManagement.repository.DishRepository;
 import vn.edu.likelion.OrderManagement.repository.OrderDetailRepository;
 import vn.edu.likelion.OrderManagement.service.DishService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.util.List;
@@ -105,21 +107,31 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<DishDTO> getTopSellingDishes() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime thirtyDaysAgo = now.minusDays(30);
-        // Query total sold 30 days ago
+    public List<TopSellingDishDTO> getTopSellingDishes() {
+        LocalDate now = LocalDate.now();
+        LocalDate thirtyDaysAgo = now.minusDays(30);
+
         List<Object[]> result = orderDetailRepository.findTopSellingDishes(thirtyDaysAgo, now);
 
-        List<DishDTO> topSellingDishes = result.stream()
+        return result.stream()
                 .map(row -> {
                     DishEntity dish = (DishEntity) row[0];
-                    int quantitySold = (int) row[1];
-                    return convertToDTO(dish);
+                    int quantitySold = ((Long) row[1]).intValue();
+
+                    // Tạo TopSellingDishDTO trực tiếp từ DishEntity
+                    TopSellingDishDTO topSellingDishDTO = new TopSellingDishDTO();
+                    topSellingDishDTO.setId(dish.getId());
+                    topSellingDishDTO.setName(dish.getName());
+                    topSellingDishDTO.setDescription(dish.getDescription());
+                    topSellingDishDTO.setPrice(dish.getPrice());
+                    topSellingDishDTO.setImage(dish.getImage());
+                    topSellingDishDTO.setStatus(dish.isStatus());
+                    topSellingDishDTO.setCategoryId(dish.getCategory().getId());
+                    topSellingDishDTO.setQuantitySold(quantitySold);
+
+                    return topSellingDishDTO;
                 })
                 .collect(Collectors.toList());
-
-        return topSellingDishes;
     }
 
     // convertToDTO
