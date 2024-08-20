@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins = {"http://192.168.18.81:5173", "http://localhost:9999", "jdbc:mysql://viaduct.proxy.rlwy.net:37349/railway"}, allowCredentials = "true")
 @RequestMapping("/api/v1/auth/dishes")
 public class DishController {
 
