@@ -44,7 +44,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(new String[]{"http://192.168.18.81:5173", "http://localhost:9999", "jdbc:mysql://viaduct.proxy.rlwy.net:37349/railway"})
+                .allowedOrigins(new String[]{"http://192.168.18.81:5173", "http://localhost:9999", "http://localhost:5173"})
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
