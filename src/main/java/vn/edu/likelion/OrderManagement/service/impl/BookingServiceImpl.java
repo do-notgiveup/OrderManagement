@@ -87,6 +87,7 @@ public class BookingServiceImpl implements BookingService {
         bookingDTO.setPhoneNumber(bookingEntity.getPhoneNumber());
         bookingDTO.setBookingTime(bookingEntity.getBookingDate());
         bookingDTO.setSeat(bookingEntity.getSeat());
+        bookingDTO.setStatus(bookingEntity.getStatus());
         bookingDTO.setUserId(bookingEntity.getUser().getId());
         return bookingDTO;
     }
