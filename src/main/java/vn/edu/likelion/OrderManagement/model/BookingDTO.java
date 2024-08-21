@@ -18,5 +18,6 @@ public class BookingDTO {
     private LocalDateTime bookingTime;
     private String phoneNumber;
     private int seat;
+    private int status;
     private int userId;
 }
