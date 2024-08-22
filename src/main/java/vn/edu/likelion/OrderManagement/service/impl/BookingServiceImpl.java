@@ -40,7 +40,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public boolean delete(BookingEntity bookingEntity) {
         if (bookingRepository.existsById(bookingEntity.getId())) {
-            bookingRepository.delete(bookingEntity);
+            bookingEntity.setDeleted(true);
+            bookingRepository.save(bookingEntity);
             return true;
         } else {
             throw new EntityNotFoundException("Booking not found with id: " + bookingEntity.getId());

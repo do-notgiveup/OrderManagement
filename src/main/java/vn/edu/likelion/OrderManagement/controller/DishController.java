@@ -34,8 +34,9 @@ public class DishController {
     public ResponseEntity<Page<DishDTO>> getAllDishes(@RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "5") int size,
                                                       @RequestParam(defaultValue = "id") String sortBy,
-                                                      @RequestParam(defaultValue = "asc") String sortDirection) {
-        Page<DishDTO> dishes = dishService.findAllDishes(page, size, sortBy, sortDirection);
+                                                      @RequestParam(defaultValue = "asc") String sortDirection,
+                                                      @RequestParam(defaultValue = "0") int category) {
+        Page<DishDTO> dishes = dishService.findAllDishes(page, size, sortBy, sortDirection, category);
         return ResponseEntity.ok(dishes);
     }
 
@@ -74,9 +75,10 @@ public class DishController {
 
     // Update Dish
     @PutMapping("/{id}")
-    public ResponseEntity<DishEntity> updateDish(@PathVariable int id, @RequestBody DishEntity dish) {
+    public ResponseEntity<DishDTO> updateDish(@PathVariable int id, @RequestBody DishEntity dish) {
         dish.setId(id);
-        DishEntity updatedDish = dishService.update(dish);
+        dish.setCategory(dishService.findById(id).get().getCategory());
+        DishDTO updatedDish = dishService.updateDish(dish);
         return ResponseEntity.ok(updatedDish);
     }
 

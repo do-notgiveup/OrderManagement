@@ -1,5 +1,6 @@
 package vn.edu.likelion.OrderManagement.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.likelion.OrderManagement.entity.CategoryEntity;
@@ -38,10 +39,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public boolean delete(CategoryEntity categoryEntity) {
         if (categoryRepository.existsById(categoryEntity.getId())) {
-            categoryRepository.delete(categoryEntity);
+            categoryEntity.setDeleted(true);
+            categoryRepository.save(categoryEntity);
             return true;
         } else {
-            return false;
+            throw new EntityNotFoundException("Category not found with id: " + categoryEntity.getId());
         }
     }
 
