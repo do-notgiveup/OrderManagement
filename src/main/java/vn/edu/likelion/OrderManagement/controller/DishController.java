@@ -76,7 +76,6 @@ public class DishController {
     @PutMapping("/{id}")
     public ResponseEntity<DishDTO> updateDish(@PathVariable int id, @RequestBody DishEntity dish) {
         dish.setId(id);
-        dish.setCategory(dishService.findById(id).get().getCategory());
         DishDTO updatedDish = dishService.updateDish(dish);
         return ResponseEntity.ok(updatedDish);
     }
