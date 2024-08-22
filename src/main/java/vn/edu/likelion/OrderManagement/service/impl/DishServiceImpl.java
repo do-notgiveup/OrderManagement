@@ -88,10 +88,16 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public Page<DishDTO> findAllDishes(int page, int size, String sortBy, String sortDirection) {
+    public Page<DishDTO> findAllDishes(int page, int size, String sortBy, String sortDirection, int category) {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<DishEntity> dishEntities = dishRepository.findAll(pageable);
+        Page<DishEntity> dishEntities = null;
+        if (category == 0){
+            dishEntities = dishRepository.findByIsDeleted(pageable, false);
+        } else {
+            dishEntities = dishRepository.findByIsDeletedAndCategoryId(pageable, false, category);
+        }
+
         return dishEntities.map(this::convertToDTO);
     }
 

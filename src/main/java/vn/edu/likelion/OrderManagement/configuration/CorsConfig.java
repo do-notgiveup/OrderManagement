@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 //@Configuration
 //// dòng này rất hay nha, nó có thể fix được bug CORS mặc dù đã có @CrosOrigin
-//@OpenAPIDefinition(servers = {@Server(url = "/", description = "any description of Server URL")})
+@OpenAPIDefinition(servers = {@Server(url = "/", description = "any description of Server URL")})
 //public class CORSConfig /*implements WebMvcConfigurer*/ {
 //
 ////    @Override
