@@ -42,9 +42,20 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    public DishDTO updateDish(DishEntity dishEntity) {
+        if (dishRepository.existsById(dishEntity.getId())) {
+            DishEntity updatedDish = dishRepository.save(dishEntity);
+            return convertToDTO(updatedDish);
+        } else {
+            throw new RuntimeException("Dish not found with id: " + dishEntity.getId());
+        }
+    }
+
+    @Override
     public DishEntity create(DishEntity dishEntity) {
         return dishRepository.save(dishEntity);
     }
+
 
     @Override
     public DishEntity update(DishEntity dishEntity) {
@@ -58,7 +69,8 @@ public class DishServiceImpl implements DishService {
     @Override
     public boolean delete(DishEntity dishEntity) {
         if (dishRepository.existsById(dishEntity.getId())) {
-            dishRepository.delete(dishEntity);
+            dishEntity.setDeleted(true);
+            dishRepository.save(dishEntity);
             return true;
         } else {
             throw new EntityNotFoundException("Dish not found with id: " + dishEntity.getId());
@@ -76,10 +88,16 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public Page<DishDTO> findAllDishes(int page, int size, String sortBy, String sortDirection) {
+    public Page<DishDTO> findAllDishes(int page, int size, String sortBy, String sortDirection, int category) {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<DishEntity> dishEntities = dishRepository.findAll(pageable);
+        Page<DishEntity> dishEntities = null;
+        if (category == 0){
+            dishEntities = dishRepository.findByIsDeleted(pageable, false);
+        } else {
+            dishEntities = dishRepository.findByIsDeletedAndCategoryId(pageable, false, category);
+        }
+
         return dishEntities.map(this::convertToDTO);
     }
 
