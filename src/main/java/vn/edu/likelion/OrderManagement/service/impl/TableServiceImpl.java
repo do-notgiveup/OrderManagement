@@ -49,7 +49,8 @@ public class TableServiceImpl implements TableService {
     public boolean delete(TableEntity tableEntity) {
         tableRepository.findById(tableEntity.getId())
                 .orElseThrow(() -> new RuntimeException("Table not found with id: " + tableEntity.getId()));
-        tableRepository.delete(tableEntity);
+        tableEntity.setDeleted(true);
+        tableRepository.save(tableEntity);
         return true;
     }
 

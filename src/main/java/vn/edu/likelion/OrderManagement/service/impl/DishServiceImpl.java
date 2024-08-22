@@ -69,7 +69,8 @@ public class DishServiceImpl implements DishService {
     @Override
     public boolean delete(DishEntity dishEntity) {
         if (dishRepository.existsById(dishEntity.getId())) {
-            dishRepository.delete(dishEntity);
+            dishEntity.setDeleted(true);
+            dishRepository.save(dishEntity);
             return true;
         } else {
             throw new EntityNotFoundException("Dish not found with id: " + dishEntity.getId());
