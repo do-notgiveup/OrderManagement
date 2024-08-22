@@ -38,7 +38,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public TableEntity update(TableEntity tableEntity) {
-        if (tableRepository.existsById(tableEntity.getId())) {
+        if (tableRepository.existsById(tableEntity.getId()) && !tableEntity.isDeleted()) {
             return tableRepository.save(tableEntity);
         } else {
             throw new RuntimeException("Table not found with id: " + tableEntity.getId());
@@ -68,6 +68,7 @@ public class TableServiceImpl implements TableService {
     public Optional<TableDTO> findTableById(int id) {
         Optional<TableEntity> tableEntity = tableRepository.findById(id);
         return tableEntity.stream()
+                .filter(tableEntity1 -> !tableEntity1.isDeleted())
                 .map(this::convertToDTO)
                 .findFirst();
     }
@@ -76,6 +77,7 @@ public class TableServiceImpl implements TableService {
     public List<TableDTO> findAllTables() {
         List<TableEntity> tableEntities = tableRepository.findAll();
         return tableEntities.stream()
+                .filter(tableEntity -> !tableEntity.isDeleted())
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
