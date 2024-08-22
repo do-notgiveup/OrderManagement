@@ -75,9 +75,10 @@ public class DishController {
 
     // Update Dish
     @PutMapping("/{id}")
-    public ResponseEntity<DishEntity> updateDish(@PathVariable int id, @RequestBody DishEntity dish) {
+    public ResponseEntity<DishDTO> updateDish(@PathVariable int id, @RequestBody DishEntity dish) {
         dish.setId(id);
-        DishEntity updatedDish = dishService.update(dish);
+        dish.setCategory(dishService.findById(id).get().getCategory());
+        DishDTO updatedDish = dishService.updateDish(dish);
         return ResponseEntity.ok(updatedDish);
     }
 
