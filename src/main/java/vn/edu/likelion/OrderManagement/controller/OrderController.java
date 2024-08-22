@@ -24,7 +24,6 @@ public class OrderController {
 
     @PostMapping
     public OrderEntity create(@RequestBody OrderRequest order) {
-
         return orderService.createOrder(order);
     }
 }
