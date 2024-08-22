@@ -42,9 +42,20 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    public DishDTO updateDish(DishEntity dishEntity) {
+        if (dishRepository.existsById(dishEntity.getId())) {
+            DishEntity updatedDish = dishRepository.save(dishEntity);
+            return convertToDTO(updatedDish);
+        } else {
+            throw new RuntimeException("Dish not found with id: " + dishEntity.getId());
+        }
+    }
+
+    @Override
     public DishEntity create(DishEntity dishEntity) {
         return dishRepository.save(dishEntity);
     }
+
 
     @Override
     public DishEntity update(DishEntity dishEntity) {

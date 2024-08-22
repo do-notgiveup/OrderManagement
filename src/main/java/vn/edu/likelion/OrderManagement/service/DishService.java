@@ -13,6 +13,7 @@ public interface DishService extends BaseCRUD<DishEntity> {
 //    List<DishEntity> getTopSellingDishes(); // Get top seller
 
     DishDTO createDish(DishEntity dishEntity);
+    DishDTO updateDish(DishEntity dishEntity);
     Page<DishDTO> findAllDishes(int page, int size, String sortBy, String sortDirection);
     DishDTO findByDishId(int id);
     List<DishDTO> getDishesByCategory(int categoryId);
