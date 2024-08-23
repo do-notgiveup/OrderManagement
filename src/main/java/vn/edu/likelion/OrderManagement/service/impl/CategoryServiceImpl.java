@@ -70,6 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setId(categoryEntity.getId());
         categoryDTO.setName(categoryEntity.getName());
+        categoryDTO.setImage(categoryEntity.getImage());
         return categoryDTO;
     }
 }
