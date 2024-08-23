@@ -26,6 +26,10 @@ public class CategoryEntity extends BaseEntity implements Serializable {
     @Column
     private String name;
 
+    // AẢnh
+    @Column
+    private String image;
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DishEntity> dishes;
 }

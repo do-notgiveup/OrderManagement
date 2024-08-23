@@ -8,6 +8,8 @@ import java.util.List;
 @Data
 public class OrderRequest {
 
+    private int orderId;
+
     //giá của cả tổng bill
     private double price;
 

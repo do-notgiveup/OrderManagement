@@ -64,7 +64,7 @@ public class InvoiceController {
         ByteArrayInputStream in = null;
         in = reportService.exportInvoicesByDate(date);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=invoices_" + date + ".xlsx");
+        headers.add("Content-Disposition", "attachment; filename=BaoCaoNgay_" + date + ".xlsx");
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(new InputStreamResource(in));
@@ -79,7 +79,7 @@ public class InvoiceController {
 //        LocalDateTime endOfDay = endDate.atTime(23, 59, 59);
         ByteArrayInputStream in = reportService.exportInvoicesByDateRange(startDate, endDate);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=invoices_" + startDate + "_to_" + endDate + ".xlsx");
+        headers.add("Content-Disposition", "attachment; filename=BaoCao_Tu_" + startDate + "_den_" + endDate + ".xlsx");
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(new InputStreamResource(in));
@@ -92,18 +92,18 @@ public class InvoiceController {
     ) {
         ByteArrayInputStream in = reportService.exportInvoicesByMonth(year, month);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=invoices_" + year + "_" + month + ".xlsx");
+        headers.add("Content-Disposition", "attachment; filename=BaoCao_Thang_" + month + "_Nam_" + year + ".xlsx");
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(new InputStreamResource(in));
     }
 
-    @GetMapping
-    public ResponseEntity<Page<InvoiceDTO>> getAllDishes(@RequestParam(defaultValue = "0") int page,
-                                                         @RequestParam(defaultValue = "5") int size,
-                                                         @RequestParam(defaultValue = "id") String sortBy,
-                                                         @RequestParam(defaultValue = "asc") String sortDirection) {
-        Page<InvoiceDTO> dishes = invoiceService.findAllInvoices(page, size, sortBy, sortDirection);
-        return ResponseEntity.ok(dishes);
-    }
+//    @GetMapping
+//    public ResponseEntity<Page<InvoiceDTO>> getAllDishes(@RequestParam(defaultValue = "0") int page,
+//                                                         @RequestParam(defaultValue = "5") int size,
+//                                                         @RequestParam(defaultValue = "id") String sortBy,
+//                                                         @RequestParam(defaultValue = "asc") String sortDirection) {
+//        Page<InvoiceDTO> dishes = invoiceService.findAllInvoices(page, size, sortBy, sortDirection);
+//        return ResponseEntity.ok(dishes);
+//    }
 }

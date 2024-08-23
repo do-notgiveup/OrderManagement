@@ -75,11 +75,39 @@ public class DishController {
 
     // Update Dish
     @PutMapping("/{id}")
-    public ResponseEntity<DishDTO> updateDish(@PathVariable int id, @RequestBody DishEntity dish) {
-        dish.setId(id);
-        dish.setCategory(dishService.findById(id).get().getCategory());
-        DishDTO updatedDish = dishService.updateDish(dish);
-        return ResponseEntity.ok(updatedDish);
+//    public ResponseEntity<DishDTO> updateDish(@PathVariable int id, @RequestBody DishEntity dish) {
+//        dish.setId(id);
+//        DishDTO updatedDish = dishService.updateDish(dish);
+//        return ResponseEntity.ok(updatedDish);
+//    }
+    public ResponseEntity<DishDTO> updateDish(@PathVariable int id, @RequestBody CreateDish dish) {
+        DishEntity existingDish = dishService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish not found with id: " + id));
+
+        try {
+            if (dish.getName() != null) {
+                existingDish.setName(dish.getName());
+            }
+            if (dish.getDescription() != null) {
+                existingDish.setDescription(dish.getDescription());
+            }
+            if (dish.getPrice() != null) {
+                existingDish.setPrice(Double.parseDouble(dish.getPrice()));
+            }
+            if (dish.getImage() != null) {
+                existingDish.setImage(dish.getImage());
+            }
+            if (dish.getCategory_id() != 0) {
+                CategoryEntity category = categoryService.findById(dish.getCategory_id())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found with id: " + dish.getCategory_id()));
+                existingDish.setCategory(category);
+            }
+
+            DishDTO updatedDishDTO = dishService.updateDish(existingDish);
+            return ResponseEntity.ok(updatedDishDTO);
+        } catch (NumberFormatException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid price format");
+        }
     }
 
     // Delete Dish
