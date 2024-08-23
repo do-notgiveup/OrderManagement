@@ -19,7 +19,7 @@ import vn.edu.likelion.OrderManagement.util.JwtUtil;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     @Autowired
@@ -53,12 +53,12 @@ public class UserController {
 //    }
 
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> register(@RequestBody UserEntity userEntity) {
+    public ResponseEntity<Object> register(@RequestBody UserEntity userEntity) {
         try {
             UserEntity user = userInfoService.addUser(userEntity);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
