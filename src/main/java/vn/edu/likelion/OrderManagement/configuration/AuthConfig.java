@@ -13,18 +13,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import vn.edu.likelion.OrderManagement.service.impl.UserServiceImpl;
+import vn.edu.likelion.OrderManagement.service.impl.UserInfoService;
 import vn.edu.likelion.OrderManagement.util.JwtAuthFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class AuthConfig {
+
     @Autowired
     @Lazy
     private JwtAuthFilter authFilter;
@@ -32,29 +36,25 @@ public class AuthConfig {
     // User Creation
     @Bean
     public UserDetailsService userDetailsService() {
-        return new UserServiceImpl();
+        return new UserInfoService();
     }
 
-//    @Bean
-//    public UserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(User.withUsername("user")
-//                .password(passwordEncoder.encode("password"))
-//                .roles("USER")
-//                .build());
-//        return manager;
-//    }
+    @Bean
+    public UserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(User.withUsername("user")
+                .password(passwordEncoder.encode("password"))
+                .roles("USER")
+                .build());
+        return manager;
+    }
 
     // Configuring HttpSecurity
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/welcome", "/api/v1/auth/register",
-                        "/api/v1/auth/login", "/api/v1/auth/**", "/swagger-ui-custom.html", "/swagger-ui/index.html").permitAll())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/staff/**").authenticated())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/admin/**").authenticated())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/upload/**").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/welcome", "/api/user/register", "/api/user/login", "/swagger-ui-custom.html").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/auth/**").authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
@@ -79,4 +79,6 @@ public class AuthConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
+
 }
