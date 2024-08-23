@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import vn.edu.likelion.OrderManagement.entity.OrderDetailEntity;
+import vn.edu.likelion.OrderManagement.model.OrderDetailRequest;
 
 import java.time.LocalDate;
 import java.util.List;
