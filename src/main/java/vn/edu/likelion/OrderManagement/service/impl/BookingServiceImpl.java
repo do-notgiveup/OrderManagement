@@ -2,10 +2,7 @@ package vn.edu.likelion.OrderManagement.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import vn.edu.likelion.OrderManagement.entity.BookingEntity;
 import vn.edu.likelion.OrderManagement.entity.DishEntity;
@@ -18,6 +15,7 @@ import vn.edu.likelion.OrderManagement.service.BookingService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -30,6 +28,29 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingEntity create(BookingEntity booking) {
         return bookingRepository.save(booking);
+    }
+
+    @Override
+    public BookingDTO createBooking(BookingDTO booking) {
+        BookingEntity createdBooking = bookingRepository.save(BookingEntity.builder()
+                .bookingDate(booking.getBookingTime())
+                .address(booking.getCustomerAddress())
+                .seat(booking.getSeat())
+                .name(booking.getCustomerName())
+                .phoneNumber(booking.getPhoneNumber())
+                .user(userRepository.findById(booking.getUserId()).get())
+                .build());
+        return convertToDTO(createdBooking);
+    }
+
+    @Override
+    public BookingDTO updateBooking(BookingEntity bookingEntity) {
+        if (bookingRepository.existsById(bookingEntity.getId())) {
+            BookingEntity updateBooking = bookingRepository.save(bookingEntity);
+            return convertToDTO(updateBooking);
+        } else {
+            throw new RuntimeException("Boking not found with id: " + bookingEntity.getId());
+        }
     }
 
     @Override
@@ -58,25 +79,17 @@ public class BookingServiceImpl implements BookingService {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<BookingEntity> bookingEntities = bookingRepository.findAll(pageable);
-        return bookingEntities.map(this::convertToDTO);
+        // Convert Page to List for filter
+        List<BookingDTO> bookingDTOs = bookingEntities.stream()
+                .filter(bookingEntity -> !bookingEntity.isDeleted())
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        return new PageImpl<>(bookingDTOs, pageable, bookingEntities.getTotalElements()); //Return PageImpl Constructor
     }
 
     @Override
     public Optional<BookingEntity> findById(int id) {
         return bookingRepository.findById(id);
-    }
-
-    @Override
-    public BookingDTO createBooking(BookingDTO booking) {
-        BookingEntity createdBooking = bookingRepository.save(BookingEntity.builder()
-                .bookingDate(booking.getBookingTime())
-                .address(booking.getCustomerAddress())
-                .seat(booking.getSeat())
-                .name(booking.getCustomerName())
-                .phoneNumber(booking.getPhoneNumber())
-                .user(userRepository.findById(booking.getUserId()).get())
-                .build());
-        return convertToDTO(createdBooking);
     }
 
     // convertToDTO for BookingDTO

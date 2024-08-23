@@ -14,8 +14,6 @@ public interface DishRepository extends JpaRepository<DishEntity, Integer> {
 
     List<DishEntity> findByCategoryId(Integer categoryId);
 
-//    DishEntity findByNameIgnoreCase(String name);
-
     List<DishEntity> findByStatus(boolean status);
 
     List<DishEntity> findByPriceBetween(double minPrice, double maxPrice);
