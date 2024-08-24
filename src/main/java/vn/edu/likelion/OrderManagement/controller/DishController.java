@@ -53,8 +53,8 @@ public class DishController {
     // Create Dish
     @PostMapping
     public ResponseEntity<DishDTO> createDish(@RequestBody CreateDish dish) {
-        CategoryEntity category = categoryService.findById(dish.getCategory_id())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found with id: " + dish.getCategory_id()));
+        CategoryEntity category = categoryService.findById(dish.getCategoryId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found with id: " + dish.getCategoryId()));
 
         try {
             DishEntity dishEntity = DishEntity.builder()
@@ -97,9 +97,9 @@ public class DishController {
             if (dish.getImage() != null) {
                 existingDish.setImage(dish.getImage());
             }
-            if (dish.getCategory_id() != 0) {
-                CategoryEntity category = categoryService.findById(dish.getCategory_id())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found with id: " + dish.getCategory_id()));
+            if (dish.getCategoryId() != 0) {
+                CategoryEntity category = categoryService.findById(dish.getCategoryId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found with id: " + dish.getCategoryId()));
                 existingDish.setCategory(category);
             }
 
