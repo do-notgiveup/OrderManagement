@@ -40,4 +40,15 @@ public class OrderController {
     public ResponseEntity<Optional<OrderRequest>> findById(@PathVariable int id) {
         return ResponseEntity.ok(orderService.findOrderById(id));
     }
+
+    @GetMapping("/by-table/{id}")
+    public ResponseEntity<OrderRequest> findByTable(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(orderService.findOrderByTable(id));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
 }

@@ -1,7 +1,6 @@
 package vn.edu.likelion.OrderManagement.model;
 
 import lombok.Data;
-import vn.edu.likelion.OrderManagement.entity.DishEntity;
 
 import java.util.List;
 

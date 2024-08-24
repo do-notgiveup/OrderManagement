@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import vn.edu.likelion.OrderManagement.entity.InvoiceEntity;
 import vn.edu.likelion.OrderManagement.entity.OrderEntity;
 
+import vn.edu.likelion.OrderManagement.entity.TableEntity;
 import vn.edu.likelion.OrderManagement.model.InvoiceDTO;
 import vn.edu.likelion.OrderManagement.model.OrderDetailRequest;
 import vn.edu.likelion.OrderManagement.model.OrderRequest;
@@ -85,6 +86,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderEntity createOrder(OrderRequest order) {
+        // Update status table
+        TableEntity tableEntity = tableRepository.findById(order.getTableId())
+                .orElseThrow(() -> new RuntimeException("TableId not found"));
+        tableEntity.setStatus(true);
+        tableRepository.save(tableEntity);
+
         //Set data order
         OrderEntity orderEntity = OrderEntity.builder()
                 .user(userRepository.findById(order.getUserId())
@@ -143,5 +150,14 @@ public class OrderServiceImpl implements OrderService {
         }
         orderRequest.setOrderDetailRequests(orderDetailRequests);
         return orderRequest;
+    }
+
+    public OrderRequest findOrderByTable(int tableId) {
+        Optional<TableEntity> table = tableRepository.findById(tableId);
+
+        if (table.isPresent() && table.get().isStatus()) {
+            OrderEntity orderEntity = orderRepository.findByTableIdOrderByCreateTimeDesc(table.get().getId()).get(0);
+            return convertToDTO(orderEntity);
+        } else return null;
     }
 }
