@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import vn.edu.likelion.OrderManagement.entity.InvoiceEntity;
 import vn.edu.likelion.OrderManagement.entity.OrderEntity;
 
+import vn.edu.likelion.OrderManagement.entity.TableEntity;
 import vn.edu.likelion.OrderManagement.model.InvoiceDTO;
 import vn.edu.likelion.OrderManagement.model.OrderDetailRequest;
 import vn.edu.likelion.OrderManagement.model.OrderRequest;
@@ -85,6 +86,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderEntity createOrder(OrderRequest order) {
+        // Update status table
+        TableEntity tableEntity = tableRepository.findById(order.getTableId())
+                .orElseThrow(() -> new RuntimeException("TableId not found"));
+        tableEntity.setStatus(true);
+        tableRepository.save(tableEntity);
+
         //Set data order
         OrderEntity orderEntity = OrderEntity.builder()
                 .user(userRepository.findById(order.getUserId())
@@ -94,6 +101,9 @@ public class OrderServiceImpl implements OrderService {
                         .orElseThrow(() -> new RuntimeException("TableId not found")))
                 .build();
 
+        if (order.getOrderId() != 0) {
+            orderEntity.setId(order.getOrderId());
+        }
         // Set data orderDetail
         for (OrderDetailRequest orderDetailRequest : order.getOrderDetailRequests()) {
             OrderDetailEntity orderDetail = OrderDetailEntity.builder()
@@ -103,10 +113,12 @@ public class OrderServiceImpl implements OrderService {
                     .note(orderDetailRequest.getNote())
                     .order(orderEntity)
                     .build();
-
-            orderEntity.setTotalPrice(orderEntity.getTotalPrice()
-                    + orderDetail.getPricePerItem() * orderDetail.getQuantity());
-
+            if (orderDetailRequest.getDishId() != 0) {
+                orderDetail.setId(orderDetailRequest.getDishId());
+            } else {
+                orderEntity.setTotalPrice(orderEntity.getTotalPrice()
+                        + orderDetail.getPricePerItem() * orderDetail.getQuantity());
+            }
             orderRepository.save(orderEntity);
             orderDetailRepository.save(orderDetail);
         }
@@ -120,6 +132,23 @@ public class OrderServiceImpl implements OrderService {
         invoiceRepository.save(invoiceEntity);
 
         return orderEntity;
+    }
+
+    @Override
+    public String payOrder(OrderRequest order) {
+        // Update status table
+        TableEntity tableEntity = tableRepository.findById(order.getTableId())
+                .orElseThrow(() -> new RuntimeException("TableId not found"));
+        tableEntity.setStatus(false);
+        tableRepository.save(tableEntity);
+
+        // Update status order
+        OrderEntity orderEntity = orderRepository.findById(order.getOrderId())
+                .orElseThrow(() -> new RuntimeException("OrderId not found"));
+        orderEntity.setStatus(true);
+        orderRepository.save(orderEntity);
+
+        return "pay success";
     }
 
     // convertToDTO for OrderRequest
@@ -143,5 +172,14 @@ public class OrderServiceImpl implements OrderService {
         }
         orderRequest.setOrderDetailRequests(orderDetailRequests);
         return orderRequest;
+    }
+
+    public OrderRequest findOrderByTable(int tableId) {
+        Optional<TableEntity> table = tableRepository.findById(tableId);
+
+        if (table.isPresent() && table.get().isStatus()) {
+            OrderEntity orderEntity = orderRepository.findByTableIdOrderByCreateTimeDesc(table.get().getId()).get(0);
+            return convertToDTO(orderEntity);
+        } else return null;
     }
 }
