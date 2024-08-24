@@ -15,5 +15,5 @@ public class CreateDish {
     private String price;
     private String image;
     private boolean status;
-    private int category_id;
+    private int categoryId;
 }
