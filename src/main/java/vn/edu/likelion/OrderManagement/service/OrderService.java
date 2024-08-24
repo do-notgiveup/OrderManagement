@@ -11,6 +11,8 @@ public interface OrderService extends BaseCRUD<OrderEntity> {
 
     OrderEntity createOrder(OrderRequest orderRequest);
 
+    String payOrder(OrderRequest orderRequest);
+
     List<OrderRequest> getAllOrder();
 
     Optional<OrderRequest> findOrderById(int orderId);

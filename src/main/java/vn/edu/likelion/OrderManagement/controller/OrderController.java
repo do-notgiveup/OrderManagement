@@ -31,6 +31,15 @@ public class OrderController {
         return orderService.createOrder(order);
     }
 
+    @PutMapping
+    public String payOrder(@RequestBody OrderRequest order) {
+        try {
+            return orderService.payOrder(order);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
     @GetMapping
     public ResponseEntity<List<OrderRequest>> getAllOrder() {
         return ResponseEntity.ok(orderService.getAllOrder());

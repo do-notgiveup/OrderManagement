@@ -101,6 +101,9 @@ public class OrderServiceImpl implements OrderService {
                         .orElseThrow(() -> new RuntimeException("TableId not found")))
                 .build();
 
+        if (order.getOrderId() != 0) {
+            orderEntity.setId(order.getOrderId());
+        }
         // Set data orderDetail
         for (OrderDetailRequest orderDetailRequest : order.getOrderDetailRequests()) {
             OrderDetailEntity orderDetail = OrderDetailEntity.builder()
@@ -110,10 +113,12 @@ public class OrderServiceImpl implements OrderService {
                     .note(orderDetailRequest.getNote())
                     .order(orderEntity)
                     .build();
-
-            orderEntity.setTotalPrice(orderEntity.getTotalPrice()
-                    + orderDetail.getPricePerItem() * orderDetail.getQuantity());
-
+            if (orderDetailRequest.getDishId() != 0) {
+                orderDetail.setId(orderDetailRequest.getDishId());
+            } else {
+                orderEntity.setTotalPrice(orderEntity.getTotalPrice()
+                        + orderDetail.getPricePerItem() * orderDetail.getQuantity());
+            }
             orderRepository.save(orderEntity);
             orderDetailRepository.save(orderDetail);
         }
@@ -127,6 +132,23 @@ public class OrderServiceImpl implements OrderService {
         invoiceRepository.save(invoiceEntity);
 
         return orderEntity;
+    }
+
+    @Override
+    public String payOrder(OrderRequest order) {
+        // Update status table
+        TableEntity tableEntity = tableRepository.findById(order.getTableId())
+                .orElseThrow(() -> new RuntimeException("TableId not found"));
+        tableEntity.setStatus(false);
+        tableRepository.save(tableEntity);
+
+        // Update status order
+        OrderEntity orderEntity = orderRepository.findById(order.getOrderId())
+                .orElseThrow(() -> new RuntimeException("OrderId not found"));
+        orderEntity.setStatus(true);
+        orderRepository.save(orderEntity);
+
+        return "pay success";
     }
 
     // convertToDTO for OrderRequest
