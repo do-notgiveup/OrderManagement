@@ -127,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setOrderId(orderEntity.getId());
         orderRequest.setTableId(orderEntity.getTable().getId());
-        orderRequest.setPrice(orderEntity.getTotalPrice());
+        orderRequest.setTotalPrice(orderEntity.getTotalPrice());
         orderRequest.setUserId(orderEntity.getUser().getId());
 
         List<OrderDetailEntity> orderDetailEntities = orderDetailRepository.findByOrderId(orderEntity.getId());
