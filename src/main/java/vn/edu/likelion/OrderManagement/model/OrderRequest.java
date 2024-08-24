@@ -11,7 +11,7 @@ public class OrderRequest {
     private int orderId;
 
     //giá của cả tổng bill
-    private double price;
+    private double totalPrice;
 
     // ban đầu chỉ mới gọi món chưa thanh toán thì mặc định sẽ là false
 //    private boolean status;
