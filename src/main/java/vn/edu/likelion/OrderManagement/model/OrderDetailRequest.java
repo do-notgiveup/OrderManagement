@@ -8,6 +8,12 @@ public class OrderDetailRequest {
     // id món ăn
     private int dishId;
 
+    //Ten mon an
+    private String dishName;
+
+    //Hinh anh mon an
+    private String image;
+
     // số lượng của từng món ăn được gọi
     private int quantity;
 
