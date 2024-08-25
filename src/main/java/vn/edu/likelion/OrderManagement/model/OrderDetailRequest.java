@@ -5,6 +5,9 @@ import lombok.Data;
 @Data
 public class OrderDetailRequest {
 
+    //OrderDetail Id
+    private int Id;
+
     // id món ăn
     private int dishId;
 

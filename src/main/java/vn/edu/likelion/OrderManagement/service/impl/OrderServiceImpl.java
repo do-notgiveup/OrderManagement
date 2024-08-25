@@ -115,6 +115,13 @@ public class OrderServiceImpl implements OrderService {
                     .build();
             if (orderDetailRequest.getDishId() != 0) {
                 orderDetail.setId(orderDetailRequest.getDishId());
+                OrderDetailEntity existingOrderDetail = orderDetailRepository.findById(orderDetailRequest.getDishId())
+                        .orElseThrow(() -> new RuntimeException("OrderDetail not found with id: " + orderDetailRequest.getDishId()));
+
+                // Re-Calculate price
+                double priceChange = (orderDetail.getPricePerItem() * orderDetail.getQuantity())
+                        - (existingOrderDetail.getPricePerItem() * existingOrderDetail.getQuantity());
+                orderEntity.setTotalPrice(orderEntity.getTotalPrice() + priceChange);
             } else {
                 orderEntity.setTotalPrice(orderEntity.getTotalPrice()
                         + orderDetail.getPricePerItem() * orderDetail.getQuantity());
@@ -122,14 +129,6 @@ public class OrderServiceImpl implements OrderService {
             orderRepository.save(orderEntity);
             orderDetailRepository.save(orderDetail);
         }
-
-        // Set data Invoice
-        InvoiceEntity invoiceEntity = InvoiceEntity.builder()
-                .invoiceDate(LocalDate.now())
-                .order(orderEntity)
-                .totalAmount(orderEntity.getTotalPrice())
-                .build();
-        invoiceRepository.save(invoiceEntity);
 
         return orderEntity;
     }
@@ -147,6 +146,14 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new RuntimeException("OrderId not found"));
         orderEntity.setStatus(true);
         orderRepository.save(orderEntity);
+
+        // Create Invoice
+        InvoiceEntity invoiceEntity = InvoiceEntity.builder()
+                .invoiceDate(LocalDate.now())
+                .order(orderEntity)
+                .totalAmount(orderEntity.getTotalPrice())
+                .build();
+        invoiceRepository.save(invoiceEntity);
 
         return "pay success";
     }
