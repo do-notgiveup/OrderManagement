@@ -17,4 +17,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
     List<OrderEntity> findByStatus(boolean status);
 
     //List<OrderEntity> findByTimeBetween(LocalDateTime startTime, LocalDateTime endTime);
+
+    List<OrderEntity> findByTableIdOrderByCreateTimeDesc(int tableId);
 }

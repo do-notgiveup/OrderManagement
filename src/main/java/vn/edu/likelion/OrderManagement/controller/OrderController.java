@@ -31,6 +31,15 @@ public class OrderController {
         return orderService.createOrder(order);
     }
 
+    @PutMapping
+    public String payOrder(@RequestBody OrderRequest order) {
+        try {
+            return orderService.payOrder(order);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
     @GetMapping
     public ResponseEntity<List<OrderRequest>> getAllOrder() {
         return ResponseEntity.ok(orderService.getAllOrder());
@@ -39,5 +48,16 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseEntity<Optional<OrderRequest>> findById(@PathVariable int id) {
         return ResponseEntity.ok(orderService.findOrderById(id));
+    }
+
+    @GetMapping("/by-table/{id}")
+    public ResponseEntity<OrderRequest> findByTable(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(orderService.findOrderByTable(id));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+
     }
 }
