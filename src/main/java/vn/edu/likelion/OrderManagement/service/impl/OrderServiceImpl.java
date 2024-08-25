@@ -104,7 +104,7 @@ public class OrderServiceImpl implements OrderService {
         if (order.getOrderId() != 0) {
             orderEntity.setId(order.getOrderId());
         }
-
+        orderRepository.save(orderEntity);
         // Set data orderDetail
         double total = 0;
         for (OrderDetailRequest orderDetailRequest : order.getOrderDetailRequests()) {
