@@ -32,10 +32,13 @@ public class DishController {
     // Get All Dishes - Pageable
     @GetMapping
     public ResponseEntity<Page<DishDTO>> getAllDishes(@RequestParam(defaultValue = "0") int page,
-                                                      @RequestParam(defaultValue = "5") int size,
+                                                      @RequestParam(defaultValue = "0") int size,
                                                       @RequestParam(defaultValue = "id") String sortBy,
                                                       @RequestParam(defaultValue = "asc") String sortDirection,
                                                       @RequestParam(defaultValue = "0") int category) {
+        if (size == 0) {
+            size = Integer.MAX_VALUE;
+        }
         Page<DishDTO> dishes = dishService.findAllDishes(page, size, sortBy, sortDirection, category);
         return ResponseEntity.ok(dishes);
     }

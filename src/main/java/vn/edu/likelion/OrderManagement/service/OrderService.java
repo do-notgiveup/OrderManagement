@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface OrderService extends BaseCRUD<OrderEntity> {
 
-    OrderEntity createOrder(OrderRequest orderRequest);
+    OrderRequest createOrder(OrderRequest orderRequest);
 
     String payOrder(OrderRequest orderRequest);
 
