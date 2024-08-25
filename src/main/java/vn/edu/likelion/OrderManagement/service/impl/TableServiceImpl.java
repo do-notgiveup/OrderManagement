@@ -2,8 +2,10 @@ package vn.edu.likelion.OrderManagement.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vn.edu.likelion.OrderManagement.entity.OrderEntity;
 import vn.edu.likelion.OrderManagement.entity.TableEntity;
 import vn.edu.likelion.OrderManagement.model.TableDTO;
+import vn.edu.likelion.OrderManagement.repository.OrderRepository;
 import vn.edu.likelion.OrderManagement.repository.TableRepository;
 import vn.edu.likelion.OrderManagement.service.TableService;
 
@@ -22,9 +24,12 @@ public class TableServiceImpl implements TableService {
     @Autowired
     private TableRepository tableRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
     @Override
     public TableEntity createTable(TableDTO tableDTO) {
-        TableEntity newTableEntity =  TableEntity.builder()
+        TableEntity newTableEntity = TableEntity.builder()
                 .name(tableDTO.getName())
                 .status(tableDTO.isStatus())
                 .build();
@@ -76,10 +81,23 @@ public class TableServiceImpl implements TableService {
     @Override
     public List<TableDTO> findAllTables() {
         List<TableEntity> tableEntities = tableRepository.findAll();
-        return tableEntities.stream()
+        List<TableDTO> tableDTOs = tableEntities.stream()
                 .filter(tableEntity -> !tableEntity.isDeleted())
                 .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                .toList();
+
+        for (TableDTO tableDTO : tableDTOs) {
+            if (tableDTO.isStatus()) {
+                List<OrderEntity> listOrder = orderRepository.findByTableIdOrderByCreateTimeDesc(tableDTO.getId());
+                if (!listOrder.isEmpty()) {
+                    OrderEntity orderEntity = listOrder.get(0);
+                    tableDTO.setTotalPrice(orderEntity.getTotalPrice());
+                    tableDTO.setTotalDishes(orderEntity.getOrderDetails().size());
+                }
+            }
+        }
+
+        return tableDTOs;
     }
 
     //convertToDTO
