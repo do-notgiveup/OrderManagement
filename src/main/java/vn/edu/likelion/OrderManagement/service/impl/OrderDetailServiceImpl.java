@@ -37,8 +37,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     public boolean delete(OrderDetailEntity orderDetailEntity) {
         if (orderDetailRepository.existsById(orderDetailEntity.getId())) {
-            orderDetailEntity.setDeleted(true);
-            orderDetailRepository.save(orderDetailEntity);
+            orderDetailRepository.deleteById(orderDetailEntity.getId());
             return true;
         } else {
             throw new RuntimeException("Order Detail not found with id: " + orderDetailEntity.getId());
