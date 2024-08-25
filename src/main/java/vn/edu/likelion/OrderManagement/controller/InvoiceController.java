@@ -97,13 +97,4 @@ public class InvoiceController {
                 .headers(headers)
                 .body(new InputStreamResource(in));
     }
-
-//    @GetMapping
-//    public ResponseEntity<Page<InvoiceDTO>> getAllDishes(@RequestParam(defaultValue = "0") int page,
-//                                                         @RequestParam(defaultValue = "5") int size,
-//                                                         @RequestParam(defaultValue = "id") String sortBy,
-//                                                         @RequestParam(defaultValue = "asc") String sortDirection) {
-//        Page<InvoiceDTO> dishes = invoiceService.findAllInvoices(page, size, sortBy, sortDirection);
-//        return ResponseEntity.ok(dishes);
-//    }
 }

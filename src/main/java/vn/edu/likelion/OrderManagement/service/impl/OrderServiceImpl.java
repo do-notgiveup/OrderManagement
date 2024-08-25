@@ -85,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderEntity createOrder(OrderRequest order) {
+    public OrderRequest createOrder(OrderRequest order) {
         // Update status table
         TableEntity tableEntity = tableRepository.findById(order.getTableId())
                 .orElseThrow(() -> new RuntimeException("TableId not found"));
@@ -104,7 +104,9 @@ public class OrderServiceImpl implements OrderService {
         if (order.getOrderId() != 0) {
             orderEntity.setId(order.getOrderId());
         }
+
         // Set data orderDetail
+        double total = 0;
         for (OrderDetailRequest orderDetailRequest : order.getOrderDetailRequests()) {
             OrderDetailEntity orderDetail = OrderDetailEntity.builder()
                     .quantity(orderDetailRequest.getQuantity())
@@ -113,25 +115,37 @@ public class OrderServiceImpl implements OrderService {
                     .note(orderDetailRequest.getNote())
                     .order(orderEntity)
                     .build();
-            if (orderDetailRequest.getDishId() != 0) {
-                orderDetail.setId(orderDetailRequest.getDishId());
-            } else {
-                orderEntity.setTotalPrice(orderEntity.getTotalPrice()
-                        + orderDetail.getPricePerItem() * orderDetail.getQuantity());
+
+            // hvinhtuong
+//            if (orderDetailRequest.getDishId() != 0) {
+//                orderDetail.setId(orderDetailRequest.getDishId());
+//                OrderDetailEntity existingOrderDetail = orderDetailRepository.findById(orderDetailRequest.getDishId())
+//                        .orElseThrow(() -> new RuntimeException("OrderDetail not found with id: " + orderDetailRequest.getDishId()));
+//
+//                // Re-Calculate price
+//                double priceChange = (orderDetail.getPricePerItem() * orderDetail.getQuantity())
+//                        - (existingOrderDetail.getPricePerItem() * existingOrderDetail.getQuantity());
+//                orderEntity.setTotalPrice(orderEntity.getTotalPrice() + priceChange);
+//            } else {
+//                orderEntity.setTotalPrice(orderEntity.getTotalPrice()
+//                        + orderDetail.getPricePerItem() * orderDetail.getQuantity());
+//            }
+
+            // pdnghia
+            if (orderDetailRequest.getId() != 0){
+                orderDetail.setId(orderDetailRequest.getId());
             }
-            orderRepository.save(orderEntity);
+
+            //Re-Calculate price
+            total += orderDetailRequest.getQuantity() * orderDetailRequest.getPricePerItem();
+
             orderDetailRepository.save(orderDetail);
         }
 
-        // Set data Invoice
-        InvoiceEntity invoiceEntity = InvoiceEntity.builder()
-                .invoiceDate(LocalDate.now())
-                .order(orderEntity)
-                .totalAmount(orderEntity.getTotalPrice())
-                .build();
-        invoiceRepository.save(invoiceEntity);
+        orderEntity.setTotalPrice(total);
+        orderRepository.save(orderEntity);
 
-        return orderEntity;
+        return convertToDTO(orderEntity);
     }
 
     @Override
@@ -147,6 +161,14 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new RuntimeException("OrderId not found"));
         orderEntity.setStatus(true);
         orderRepository.save(orderEntity);
+
+        // Create Invoice
+        InvoiceEntity invoiceEntity = InvoiceEntity.builder()
+                .invoiceDate(LocalDate.now())
+                .order(orderEntity)
+                .totalAmount(orderEntity.getTotalPrice())
+                .build();
+        invoiceRepository.save(invoiceEntity);
 
         return "pay success";
     }
@@ -164,6 +186,7 @@ public class OrderServiceImpl implements OrderService {
 
         for (OrderDetailEntity orderDetailEntity : orderDetailEntities) {
             OrderDetailRequest orderDetailRequest = new OrderDetailRequest();
+            orderDetailRequest.setId(orderDetailEntity.getId());
             orderDetailRequest.setDishId(orderDetailEntity.getDish().getId());
             orderDetailRequest.setDishName(orderDetailEntity.getDish().getName());
             orderDetailRequest.setImage(orderDetailEntity.getDish().getImage());
