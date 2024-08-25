@@ -164,9 +164,11 @@ public class OrderServiceImpl implements OrderService {
 
         for (OrderDetailEntity orderDetailEntity : orderDetailEntities) {
             OrderDetailRequest orderDetailRequest = new OrderDetailRequest();
+            orderDetailRequest.setDishId(orderDetailEntity.getDish().getId());
+            orderDetailRequest.setDishName(orderDetailEntity.getDish().getName());
+            orderDetailRequest.setImage(orderDetailEntity.getDish().getImage());
             orderDetailRequest.setQuantity(orderDetailEntity.getQuantity());
             orderDetailRequest.setPricePerItem(orderDetailEntity.getPricePerItem());
-            orderDetailRequest.setDishId(orderDetailEntity.getDish().getId());
             orderDetailRequest.setNote(orderDetailEntity.getNote());
             orderDetailRequests.add(orderDetailRequest);
         }
